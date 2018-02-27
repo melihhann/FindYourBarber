@@ -24,13 +24,6 @@ public class ExampleActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
-        /*
-        sdjkasjkdasjkdjkasd
-        sdjkasjkdasjkdjkasdsdjkasjkdasjkdjkasd
-        sdjkasjkdasjkdjkasdsdjkasjkdasjkdjkasd
-        sdjkasjkdasjkdjkasdsdjkasjkdasjkdjkasd
-         */
     }
 
 }
