@@ -29,7 +29,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="AIzaSyAmxC_KTY1P0iLou4_G-z8CngdzIOPxMk8" />
 
         <activity
             android:name=".MapsActivity"
@@ -40,10 +40,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ExampleActivity"
-            android:label="@string/title_activity_example"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -6,20 +6,26 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -28,8 +34,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap;
     private final static int MY_PERMISSION_FINE_LOCATION = 101;
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mToggle;
+    private BottomNavigationView mMainNav;
+    private FrameLayout mMainFrame;
+    private ProfileFragment profileFragment;
+    private SettingsFragment settingsFragment;
+    private HomeFragment homeFragment;
 
 
     @Override
@@ -37,42 +46,53 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
+        mMainFrame = (FrameLayout) findViewById(R.id.main_frame);
+        mMainNav = (BottomNavigationView) findViewById(R.id.main_nav);
 
-        mDrawerLayout.addDrawerListener(mToggle);
-        mToggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        profileFragment = new ProfileFragment();
+        settingsFragment = new SettingsFragment();
+        homeFragment = new HomeFragment();
 
-        //Item'a tiklama
-        NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_menu);
-        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener(){
+        setFragment(homeFragment);
+
+
+
+        mMainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem){
-                switch (menuItem.getItemId()){
-                    case(R.id.myProfile):
-                        Intent accountActivity = new Intent(getApplicationContext(), ExampleActivity.class);
-                        startActivity(accountActivity);
-                        // TODO: 8.02.2018 Diğer case'leri de ekleyeceksin. Diğerleri için sayfa yapacaksın ve içlerini dolduracaksın.
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                // TODO: 10.03.2018 Yeni bir boş activity oluştur. Bu kodları ona geçir, sonrasında vuala
+
+                switch (item.getItemId()){
+
+                    case R.id.nav_home:
+                        setFragment(homeFragment);
+                        return true;
+
+                    case R.id.nav_profile:
+                        setFragment(profileFragment);
+                        return true;
+
+                    case R.id.nav_settings:
+                        setFragment(settingsFragment);
+                        return true;
+
+                        default:
+                            return false;
+                    }
                 }
-                return true;
-            }
         });
     }
 
-    //Hamburger menunun tusuna bastiginda acilmasi icin.
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(mToggle.onOptionsItemSelected(item)){
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+    private void setFragment(Fragment fragment) {
 
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.main_frame, fragment);
+        fragmentTransaction.commit();
+    }
 
 
     @Override
@@ -82,7 +102,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Location Permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
-
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_FINE_LOCATION);
