@@ -17,6 +17,7 @@ public class Barber {
     private ArrayList<Double> HCStyleCostList = new ArrayList<>();
     private ArrayList<Double> HCStyleRateList = new ArrayList<>();
     private Double barberRate;
+    private String city;
 
     public int getId(){
         return id;
@@ -79,6 +80,13 @@ public class Barber {
     }
     public void setBarberRate(Double barberRate){
         this.barberRate = barberRate;
+    }
+
+    public String getCity(){
+        return city;
+    }
+    public void setCity(String city){
+        this.city = city;
     }
 
 }

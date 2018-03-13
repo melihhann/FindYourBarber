@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "905665024082",
+    "firebase_url": "https://findyourownbarber-eac9c.firebaseio.com",
+    "project_id": "findyourownbarber-eac9c",
+    "storage_bucket": "findyourownbarber-eac9c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:905665024082:android:c33d61711ba4d8ba",
+        "android_client_info": {
+          "package_name": "com.example.agadimaganda.findyourownbarber"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "905665024082-n92l1563ke1mff8g9ro6v5jlt84ub04l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMidpfhOdT2VgLACsQAbfqg-5OgA8cUEw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -16,7 +16,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -29,17 +32,25 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private final static int MY_PERMISSION_FINE_LOCATION = 101;
-    private BottomNavigationView mMainNav;
-    private FrameLayout mMainFrame;
-    private ProfileFragment profileFragment;
-    private SettingsFragment settingsFragment;
-    private HomeFragment homeFragment;
+    private BottomNavigationView bottomNavigationView;
+    private DatabaseReference databaseReference;
 
+
+    //Lists
+    private ArrayList<Barber> barberList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,48 +61,37 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        mMainFrame = (FrameLayout) findViewById(R.id.main_frame);
-        mMainNav = (BottomNavigationView) findViewById(R.id.main_nav);
 
-        profileFragment = new ProfileFragment();
-        settingsFragment = new SettingsFragment();
-        homeFragment = new HomeFragment();
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
+        Menu menu = bottomNavigationView.getMenu();
+        MenuItem menuItem = menu.getItem(0);
+        menuItem.setChecked(true);
 
-        setFragment(homeFragment);
-
-
-
-        mMainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                // TODO: 10.03.2018 Yeni bir boş activity oluştur. Bu kodları ona geçir, sonrasında vuala
 
                 switch (item.getItemId()){
-
                     case R.id.nav_home:
-                        setFragment(homeFragment);
-                        return true;
+
+                        break;
 
                     case R.id.nav_profile:
-                        setFragment(profileFragment);
-                        return true;
+                        Intent intent1 = new Intent(MapsActivity.this, ProfileActivity.class);
+                        //intent1.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);﻿
+                        startActivity(intent1);
+                        break;
 
                     case R.id.nav_settings:
-                        setFragment(settingsFragment);
-                        return true;
-
-                        default:
-                            return false;
-                    }
+                        Intent intent2 = new Intent(MapsActivity.this, SettingsActivity.class);
+                        //intent2.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);﻿
+                        startActivity(intent2);
+                        break;
                 }
+
+                return false;//Shorter intent startActivity(new Intent(FirstActivity.this, SecondActivity.class));
+            }
         });
-    }
-
-    private void setFragment(Fragment fragment) {
-
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.main_frame, fragment);
-        fragmentTransaction.commit();
     }
 
 
