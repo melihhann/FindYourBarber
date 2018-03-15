@@ -29,7 +29,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAmxC_KTY1P0iLou4_G-z8CngdzIOPxMk8" />
+            android:value="AIzaSyBZQA1hixhcNs_MNVr7Sr6mUPqIWmXiOso" />
 
         <activity
             android:name=".MapsActivity"
@@ -47,7 +47,8 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".AddBarberActivity"/>
     </application>
 
 </manifest>

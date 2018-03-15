@@ -5,8 +5,10 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -46,7 +48,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private final static int MY_PERMISSION_FINE_LOCATION = 101;
     private BottomNavigationView bottomNavigationView;
+    private FloatingActionButton addBarberButton;
+    private Button button;
+
+    //Database
     private DatabaseReference databaseReference;
+    private FirebaseDatabase firebaseDatabase;
+    private static final String TAG = "ViewDatabase";
 
 
     //Lists
@@ -62,11 +70,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
 
 
+        //Bottom Navigation View
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
         Menu menu = bottomNavigationView.getMenu();
         MenuItem menuItem = menu.getItem(0);
         menuItem.setChecked(true);
-
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -90,6 +98,51 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
 
                 return false;//Shorter intent startActivity(new Intent(FirstActivity.this, SecondActivity.class));
+            }
+        });
+
+
+        //Berber Ekleme Butonu
+        addBarberButton = (FloatingActionButton) findViewById(R.id.addBarberButton);
+        addBarberButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent2 = new Intent(MapsActivity.this, AddBarberActivity.class);
+                startActivity(intent2);
+            }
+        });
+
+
+
+        // TODO: 11.03.2018 Test için buton ekledin. Kaldırılacak. Database'e bağlanıyor fakat read yapamıyorsun, onu çözmen lazım
+        button = (Button) findViewById(R.id.button);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                firebaseDatabase = FirebaseDatabase.getInstance();
+                databaseReference = firebaseDatabase.getReference();
+
+                databaseReference.child("BARBERS").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+
+                            String barberName = (String) snapshot.child("BARBERNAME").getValue();
+                            String city = (String) snapshot.child("CITY").getValue();
+                            int id = (int) snapshot.child("ID").getValue();
+                            Double latitude = (Double) snapshot.child("LATITUDE").getValue();
+                            Double longitude = (Double) snapshot.child("LONGITUDE").getValue();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
     }

@@ -1,16 +1,13 @@
 <resources>
     <string name="app_name">FindYourOwnBarber</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps">Home</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="title_activity_example">ExampleActivity</string>
     <string name="nav_home">Home</string>
     <string name="nav_profile">Profile</string>
     <string name="nav_settings">Settings</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
@@ -21,7 +18,7 @@
     <string name="pref_title_social_recommendations">Enable social recommendations</string>
     <string name="pref_description_social_recommendations">Recommendations for people to contact
         based on your message history
-    </string>
+   </string>
 
     <string name="pref_title_display_name">Display name</string>
     <string name="pref_default_display_name">John Smith</string>
@@ -84,5 +81,4 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
-    <string name="title_activity_profile">ProfileActivity</string>
 </resources>

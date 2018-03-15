@@ -15,13 +15,21 @@
       },
       "oauth_client": [
         {
+          "client_id": "905665024082-9r1c1u728b6pf365f6kops7ig294lcl6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.agadimaganda.findyourownbarber",
+            "certificate_hash": "20fb2be60418bbb4a93c6a9208f5b83530d38470"
+          }
+        },
+        {
           "client_id": "905665024082-n92l1563ke1mff8g9ro6v5jlt84ub04l.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBMidpfhOdT2VgLACsQAbfqg-5OgA8cUEw"
+          "current_key": "AIzaSyAz51cU3mJN-whpH-7esGO__DUN0VyBqek"
         }
       ],
       "services": {
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "905665024082-n92l1563ke1mff8g9ro6v5jlt84ub04l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
