@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 import com.google.firebase.database.DataSnapshot;
@@ -43,8 +44,6 @@ public class AddBarberActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_barber);
 
-
-
         button =  findViewById(R.id.saveButtonAction);
         barberNameEditText = findViewById(R.id.barberName_editText);
         latitudeEditText = findViewById(R.id.latitude_editText);
@@ -62,41 +61,40 @@ public class AddBarberActivity extends AppCompatActivity {
                 newBarber.setLongitude(Double.valueOf(longitudeEditText.getText().toString()));
                 newBarber.setCity((cityEditText.getText().toString()));
 
+                    mRef = FirebaseDatabase.getInstance().getReference();
+                    final DatabaseReference childRef = mRef.child("BARBERS").child(newBarber.getBarberName().toUpperCase().replace(" ", ""));
+                    final DatabaseReference childRefId = mRef.child("LASTID");
+                    mRef.keepSynced(true);
 
-                mRef = FirebaseDatabase.getInstance().getReference();
-                final DatabaseReference childRef = mRef.child("BARBERS").child(newBarber.getBarberName().toUpperCase().replace(" ", ""));
-                final DatabaseReference childRefId = mRef.child("LASTID");
-                mRef.keepSynced(true);
-
-                childRefId.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Long currentIdLong = (Long) dataSnapshot.getValue();
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            int id = toIntExact(currentIdLong);
-                            id = id + 1;
-                            childRefId.setValue(id);
-                            newBarber.setId(id-1);
-                            childRef.child("ID").setValue(newBarber.getId());
+                    childRefId.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Long currentIdLong = (Long) dataSnapshot.getValue();
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                int id = toIntExact(currentIdLong);
+                                id = id + 1;
+                                childRefId.setValue(id);
+                                newBarber.setId(id-1);
+                                childRef.child("ID").setValue(newBarber.getId());
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
 
-                childRef.child("BARBERNAME").setValue(newBarber.getBarberName());
-                childRef.child("LATITUDE").setValue(newBarber.getLatitude());
-                childRef.child("LONGITUDE").setValue(newBarber.getLongitude());
-                childRef.child("CITY").setValue(newBarber.getCity());
+                    childRef.child("BARBERNAME").setValue(newBarber.getBarberName());
+                    childRef.child("LATITUDE").setValue(newBarber.getLatitude());
+                    childRef.child("LONGITUDE").setValue(newBarber.getLongitude());
+                    childRef.child("CITY").setValue(newBarber.getCity());
 
 
-                Intent intent1 = new Intent(AddBarberActivity.this, MapsActivity.class);
-                //intent1.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                startActivity(intent1);
-            }
+                    Intent intent1 = new Intent(AddBarberActivity.this, MapsActivity.class);
+                    startActivity(intent1);
+                }
+
         });
     }
 

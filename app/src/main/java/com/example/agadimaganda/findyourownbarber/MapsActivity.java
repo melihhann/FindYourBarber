@@ -50,6 +50,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final static int MY_PERMISSION_FINE_LOCATION = 101;
     private BottomNavigationView bottomNavigationView;
     private FloatingActionButton addBarberButton;
+    private static final LatLng MELBOURNE = new LatLng(-37.813, 144.962);
+    private Marker melbourne;
+    private BitmapDescriptorFactory bitmapDescriptorFactory;
+
 
 
     public MapsActivity(){
@@ -64,6 +68,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
 
 
         //Bottom Navigation View
@@ -121,6 +127,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_FINE_LOCATION);
             }
         }
+        melbourne = mMap.addMarker(new MarkerOptions()
+                .position(MELBOURNE)
+                .title("Melbourne")
+                .snippet("Population: 4,137,400")
+                .icon(bitmapDescriptorFactory.fromResource(R.drawable.makasufakbuyukufak)));
     }
 
 

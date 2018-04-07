@@ -48,7 +48,8 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".AddBarberActivity"></activity>
+        <activity android:name=".AddBarberActivity" />
+        <activity android:name=".BarberViewActivity"></activity>
     </application>
 
 </manifest>
