@@ -1,25 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.agadimaganda.findyourownbarber.AddBarberActivity">
 
+
     <EditText
-        android:id="@+id/barberName"
+        android:id="@+id/barberName_editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/latitude_editText"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/latitude_editText"
+        android:layout_marginTop="40dp"
         android:ems="10"
+        android:gravity="center_vertical"
+        android:hint="Barber Name"
         android:inputType="textPersonName"
-        android:text="Barber Name"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="64dp" />
+        tools:layout_editor_absoluteX="43dp"
+        tools:layout_editor_absoluteY="45dp" />
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="219dp"
-        android:layout_height="123dp"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="150dp" />
-</android.support.constraint.ConstraintLayout>
+    <EditText
+        android:id="@+id/latitude_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/longitude_editText"
+        android:layout_alignStart="@+id/longitude_editText"
+        android:layout_below="@+id/barberName_editText"
+        android:layout_marginTop="42dp"
+        android:ems="10"
+        android:hint="Latitude"
+        android:inputType="numberDecimal"
+        tools:layout_editor_absoluteX="43dp"
+        tools:layout_editor_absoluteY="116dp" />
+
+    <EditText
+        android:id="@+id/longitude_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/latitude_editText"
+        android:layout_marginLeft="45dp"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="45dp"
+        android:ems="10"
+        android:hint="Longitude"
+        android:inputType="numberDecimal"
+        tools:layout_editor_absoluteX="43dp"
+        tools:layout_editor_absoluteY="194dp" />
+
+    <EditText
+        android:id="@+id/city_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/longitude_editText"
+        android:layout_marginLeft="45dp"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="45dp"
+        android:ems="10"
+        android:hint="City"
+        android:inputType="textPersonName"
+        tools:layout_editor_absoluteX="43dp"
+        tools:layout_editor_absoluteY="194dp" />
+
+
+    <Button
+        android:id="@+id/saveButtonAction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/city_editText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="46dp"
+        android:text="Create"
+        tools:layout_editor_absoluteX="148dp"
+        tools:layout_editor_absoluteY="302dp" />
+</RelativeLayout>

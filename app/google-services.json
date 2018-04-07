@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "905665024082",
-    "firebase_url": "https://findyourownbarber-eac9c.firebaseio.com",
-    "project_id": "findyourownbarber-eac9c",
-    "storage_bucket": "findyourownbarber-eac9c.appspot.com"
+    "project_number": "311491479093",
+    "firebase_url": "https://findyourownbarber-199114.firebaseio.com",
+    "project_id": "findyourownbarber-199114",
+    "storage_bucket": "findyourownbarber-199114.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:905665024082:android:c33d61711ba4d8ba",
+        "mobilesdk_app_id": "1:311491479093:android:c33d61711ba4d8ba",
         "android_client_info": {
           "package_name": "com.example.agadimaganda.findyourownbarber"
         }
       },
       "oauth_client": [
         {
-          "client_id": "905665024082-9r1c1u728b6pf365f6kops7ig294lcl6.apps.googleusercontent.com",
+          "client_id": "311491479093-9icmlm0sqcfgerpbrp3pp2mgenauch48.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.agadimaganda.findyourownbarber",
@@ -23,13 +23,13 @@
           }
         },
         {
-          "client_id": "905665024082-n92l1563ke1mff8g9ro6v5jlt84ub04l.apps.googleusercontent.com",
+          "client_id": "311491479093-u17tv8krncb10bpaad8h8a08t530vm47.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAz51cU3mJN-whpH-7esGO__DUN0VyBqek"
+          "current_key": "AIzaSyDcd4u9-kxLyghwZ65DTfXGp0ScBFNpHzo"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "905665024082-n92l1563ke1mff8g9ro6v5jlt84ub04l.apps.googleusercontent.com",
+              "client_id": "311491479093-u17tv8krncb10bpaad8h8a08t530vm47.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

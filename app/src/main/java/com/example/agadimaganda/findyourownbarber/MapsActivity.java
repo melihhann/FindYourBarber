@@ -18,6 +18,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,16 +50,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final static int MY_PERMISSION_FINE_LOCATION = 101;
     private BottomNavigationView bottomNavigationView;
     private FloatingActionButton addBarberButton;
-    private Button button;
-
-    //Database
-    private DatabaseReference databaseReference;
-    private FirebaseDatabase firebaseDatabase;
-    private static final String TAG = "ViewDatabase";
 
 
-    //Lists
-    private ArrayList<Barber> barberList = new ArrayList<>();
+    public MapsActivity(){
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,18 +77,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 switch (item.getItemId()){
                     case R.id.nav_home:
-
                         break;
 
                     case R.id.nav_profile:
                         Intent intent1 = new Intent(MapsActivity.this, ProfileActivity.class);
-                        //intent1.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);﻿
+                        //intent1.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                         startActivity(intent1);
                         break;
 
                     case R.id.nav_settings:
                         Intent intent2 = new Intent(MapsActivity.this, SettingsActivity.class);
-                        //intent2.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);﻿
+                        //intent2.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                         startActivity(intent2);
                         break;
                 }
@@ -109,40 +104,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
                 Intent intent2 = new Intent(MapsActivity.this, AddBarberActivity.class);
                 startActivity(intent2);
-            }
-        });
-
-
-
-        // TODO: 11.03.2018 Test için buton ekledin. Kaldırılacak. Database'e bağlanıyor fakat read yapamıyorsun, onu çözmen lazım
-        button = (Button) findViewById(R.id.button);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                firebaseDatabase = FirebaseDatabase.getInstance();
-                databaseReference = firebaseDatabase.getReference();
-
-                databaseReference.child("BARBERS").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-
-                            String barberName = (String) snapshot.child("BARBERNAME").getValue();
-                            String city = (String) snapshot.child("CITY").getValue();
-                            int id = (int) snapshot.child("ID").getValue();
-                            Double latitude = (Double) snapshot.child("LATITUDE").getValue();
-                            Double longitude = (Double) snapshot.child("LONGITUDE").getValue();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
             }
         });
     }
