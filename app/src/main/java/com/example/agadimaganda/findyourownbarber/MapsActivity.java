@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -22,6 +23,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -35,6 +37,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -44,21 +47,25 @@ import com.google.firebase.database.ValueEventListener;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+import static java.lang.StrictMath.toIntExact;
+
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private final static int MY_PERMISSION_FINE_LOCATION = 101;
     private BottomNavigationView bottomNavigationView;
     private FloatingActionButton addBarberButton;
-    private static final LatLng MELBOURNE = new LatLng(-37.813, 144.962);
-    private Marker melbourne;
-    private BitmapDescriptorFactory bitmapDescriptorFactory;
-
-
+    private Marker marker;
+    private BitmapDescriptorFactory bitmapDescriptorFactory;//Yarayabilir.
+    private ArrayList<Barber> barberListUpdated = new ArrayList<>();
+    private ArrayList<Barber> barberListCurrent = new ArrayList<>();
+    private Boolean isNewBarberAdded = false;
+    private DatabaseReference refForbarberList;
 
     public MapsActivity(){
 
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +76,33 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        //AddBarberActivity calisti, yeni berber eklendi.
+        Intent intent = getIntent();
+        Bundle bundle = getIntent().getExtras();
+        if (intent != null && bundle != null) {
+            isNewBarberAdded = bundle.getBoolean("flag");
+        }
 
+
+        // TODO: 8.04.2018 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        /*AddBarberActivity'den gelen marker bilgileri
+        Intent intentMarker = getIntent();
+        Bundle bundleMarker = getIntent().getExtras();
+        if (intentMarker != null && bundleMarker != null) {
+            String barberName = bundleMarker.getString("barberName");
+            Double latitude = bundleMarker.getDouble("latitude");
+            Double longitude = bundleMarker.getDouble("longitude");
+            int id = bundleMarker.getInt("id");
+
+            Barber barber = new Barber();
+            barber.setBarberName(barberName);
+            barber.setLatitude(latitude);
+            barber.setLongitude(longitude);
+            barber.setId(id);
+
+            barberList.add(barber);
+
+        }*/
 
 
         //Bottom Navigation View
@@ -87,13 +120,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     case R.id.nav_profile:
                         Intent intent1 = new Intent(MapsActivity.this, ProfileActivity.class);
-                        //intent1.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(intent1);
                         break;
 
                     case R.id.nav_settings:
                         Intent intent2 = new Intent(MapsActivity.this, SettingsActivity.class);
-                        //intent2.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(intent2);
                         break;
                 }
@@ -109,6 +142,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 Intent intent2 = new Intent(MapsActivity.this, AddBarberActivity.class);
+                intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent2);
             }
         });
@@ -127,11 +161,103 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_FINE_LOCATION);
             }
         }
-        melbourne = mMap.addMarker(new MarkerOptions()
-                .position(MELBOURNE)
-                .title("Melbourne")
-                .snippet("Population: 4,137,400")
-                .icon(bitmapDescriptorFactory.fromResource(R.drawable.makasufakbuyukufak)));
+
+        //Database References
+        refForbarberList = FirebaseDatabase.getInstance().getReference();
+        refForbarberList.keepSynced(true);
+        final DatabaseReference childRefMarker = refForbarberList.child("BARBERS");
+
+        //Harita acildiginda Database'e ekli butun berberlerin Marker'larini haritaya ekliyor.
+        childRefMarker.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                Barber barber = new Barber();
+
+                String barberName = (String) snapshot.child("BARBERNAME").getValue();
+                Double latitude = (Double) snapshot.child("LATITUDE").getValue();
+                Double longitude = (Double) snapshot.child("LONGITUDE").getValue();
+                Long idLong = (Long) snapshot.child("ID").getValue();
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    if(idLong != null){
+                    int id = toIntExact(idLong);
+                    barber.setId(id);
+                    barber.setBarberName(barberName);
+                    barber.setLatitude(latitude);
+                    barber.setLongitude(longitude);
+
+                    LatLng newBarberMarker = new LatLng(barber.getLatitude(), barber.getLongitude());
+                    marker = mMap.addMarker(new MarkerOptions()
+                            .position(newBarberMarker)
+                            .title(barber.getBarberName())
+                            //.snippet(Berber Puani)
+                            .icon(bitmapDescriptorFactory.fromResource(R.drawable.makasufakbuyukufak)));
+                    }
+                }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+        //Yeni berber eklendigi zaman haritaya Marker ekliyor.
+        if(isNewBarberAdded){
+
+            childRefMarker.addListenerForSingleValueEvent(new ValueEventListener() {
+                @RequiresApi(api = Build.VERSION_CODES.N)
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+
+                        childRefMarker.child("ornek").setValue("aga12");
+                        String barberName = (String) snapshot.child("BARBERNAME").getValue();
+                        Double latitude = (Double) snapshot.child("LATITUDE").getValue();
+                        Double longitude = (Double) snapshot.child("LONGITUDE").getValue();
+
+                        Barber barber = new Barber();
+                        Long idLong  = (Long) snapshot.child("ID").getValue();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+                            if(idLong != null){
+                                int id = toIntExact(idLong);
+                                barber.setId(id);
+                                barber.setBarberName(barberName);
+                                barber.setLatitude(latitude);
+                                barber.setLongitude(longitude);
+                                barberListUpdated.add(barber);
+
+                                if(barberListCurrent.size() < barberListUpdated.size()){
+
+                                    for(int i = barberListCurrent.size(); i < barberListUpdated.size(); i++){
+                                        barberListCurrent.add(barberListUpdated.get(i));
+                                    }
+                                }
+
+                                for(int i = 0; i < barberListCurrent.size(); i++){
+                                    LatLng newBarberMarker = new LatLng(barberListCurrent.get(barberListCurrent.size() - 1).getLatitude(), barberListCurrent.get(barberListCurrent.size() - 1).getLongitude());
+                                    marker = mMap.addMarker(new MarkerOptions()
+                                            .position(newBarberMarker)
+                                            .title(barberListCurrent.get(barberListCurrent.size() - 1).getBarberName())
+                                            //.snippet(Berber Puani)
+                                            .icon(bitmapDescriptorFactory.fromResource(R.drawable.makasufakbuyukufak)));
+                                }
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    //Error Message
+                }
+            });
+
+        }
     }
 
 

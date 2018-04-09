@@ -16,6 +16,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.apache.commons.math3.analysis.function.Add;
+
 import static java.lang.StrictMath.toIntExact;
 
 public class AddBarberActivity extends AppCompatActivity {
@@ -76,6 +78,12 @@ public class AddBarberActivity extends AppCompatActivity {
                                 childRefId.setValue(id);
                                 newBarber.setId(id-1);
                                 childRef.child("ID").setValue(newBarber.getId());
+                                flag = true;
+                                Bundle bundle = new Bundle();
+                                bundle.putBoolean("flag", flag);
+                                Intent intent = new Intent(AddBarberActivity.this, MapsActivity.class);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
                             }
                         }
 
@@ -90,9 +98,16 @@ public class AddBarberActivity extends AppCompatActivity {
                     childRef.child("LONGITUDE").setValue(newBarber.getLongitude());
                     childRef.child("CITY").setValue(newBarber.getCity());
 
-
+                    /*
+                    Bundle bundle = new Bundle();
+                    bundle.putDouble("latitude",newBarber.getLatitude());
+                    bundle.putDouble("longitude",newBarber.getLongitude());
+                    bundle.putInt("id",newBarber.getId());
+                    bundle.putString("barberName",newBarber.getBarberName());
                     Intent intent1 = new Intent(AddBarberActivity.this, MapsActivity.class);
+                    intent1.putExtras(bundle);
                     startActivity(intent1);
+                    */
                 }
 
         });
