@@ -66,7 +66,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,6 +166,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         refForbarberList.keepSynced(true);
         final DatabaseReference childRefMarker = refForbarberList.child("BARBERS");
 
+
         //Harita acildiginda Database'e ekli butun berberlerin Marker'larini haritaya ekliyor.
         childRefMarker.addValueEventListener(new ValueEventListener() {
             @Override
@@ -180,22 +180,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Double longitude = (Double) snapshot.child("LONGITUDE").getValue();
                 Long idLong = (Long) snapshot.child("ID").getValue();
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    if(idLong != null){
-                    int id = toIntExact(idLong);
-                    barber.setId(id);
-                    barber.setBarberName(barberName);
-                    barber.setLatitude(latitude);
-                    barber.setLongitude(longitude);
+                        if(idLong != null){
+                        barber.setId(idLong.intValue());
+                        barber.setBarberName(barberName);
+                        barber.setLatitude(latitude);
+                        barber.setLongitude(longitude);
 
-                    LatLng newBarberMarker = new LatLng(barber.getLatitude(), barber.getLongitude());
-                    marker = mMap.addMarker(new MarkerOptions()
-                            .position(newBarberMarker)
-                            .title(barber.getBarberName())
-                            //.snippet(Berber Puani)
-                            .icon(bitmapDescriptorFactory.fromResource(R.drawable.makasufakbuyukufak)));
-                    }
-                }
+                        LatLng newBarberMarker = new LatLng(barber.getLatitude(), barber.getLongitude());
+                        marker = mMap.addMarker(new MarkerOptions()
+                                .position(newBarberMarker)
+                                .title(barber.getBarberName())
+                                //.snippet(Berber Puani)
+                                .icon(bitmapDescriptorFactory.fromResource(R.drawable.makasufakbuyukufak)));
+
+                        marker.setTag(barber);
+                       }
+                    //}
                 }
             }
 
@@ -210,7 +210,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if(isNewBarberAdded){
 
             childRefMarker.addListenerForSingleValueEvent(new ValueEventListener() {
-                @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for(DataSnapshot snapshot : dataSnapshot.getChildren()){
@@ -222,10 +221,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         Barber barber = new Barber();
                         Long idLong  = (Long) snapshot.child("ID").getValue();
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
                             if(idLong != null){
-                                int id = toIntExact(idLong);
-                                barber.setId(id);
+                                barber.setId(idLong.intValue());
                                 barber.setBarberName(barberName);
                                 barber.setLatitude(latitude);
                                 barber.setLongitude(longitude);
@@ -245,9 +242,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                             .title(barberListCurrent.get(barberListCurrent.size() - 1).getBarberName())
                                             //.snippet(Berber Puani)
                                             .icon(bitmapDescriptorFactory.fromResource(R.drawable.makasufakbuyukufak)));
+
+                                    marker.setTag(barberListCurrent.get(barberListCurrent.size() - 1));
                                 }
                             }
-                        }
+
                     }
                 }
 
@@ -258,6 +257,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             });
 
         }
+
+        //Marker'a basildiginda, bastigi berber marker'inin sayfasina gidiyor
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+
+                Barber barber = new Barber();
+                barber = (Barber) marker.getTag();
+
+                Intent intent = new Intent(MapsActivity.this, BarberViewActivity.class);
+                Bundle bundle = new Bundle();
+
+                bundle.putString("barberName", barber.getBarberName());
+                bundle.putDouble("latitude", barber.getLatitude());
+                bundle.putDouble("longitude", barber.getLongitude());
+                bundle.putInt("id", barber.getId());
+                bundle.putString("city", barber.getCity());
+
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
     }
 
 

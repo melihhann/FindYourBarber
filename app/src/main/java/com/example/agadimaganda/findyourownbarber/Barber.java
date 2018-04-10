@@ -19,6 +19,13 @@ public class Barber {
     private Double barberRate;
     private String city;
 
+    public Barber(Object tag) {
+    }
+
+    public Barber(){
+
+    }
+
     public int getId(){
         return id;
     }

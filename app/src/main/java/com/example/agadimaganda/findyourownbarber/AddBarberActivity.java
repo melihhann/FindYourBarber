@@ -71,20 +71,20 @@ public class AddBarberActivity extends AppCompatActivity {
                     childRefId.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
+
                             Long currentIdLong = (Long) dataSnapshot.getValue();
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                int id = toIntExact(currentIdLong);
-                                id = id + 1;
-                                childRefId.setValue(id);
-                                newBarber.setId(id-1);
-                                childRef.child("ID").setValue(newBarber.getId());
-                                flag = true;
-                                Bundle bundle = new Bundle();
-                                bundle.putBoolean("flag", flag);
-                                Intent intent = new Intent(AddBarberActivity.this, MapsActivity.class);
-                                intent.putExtras(bundle);
-                                startActivity(intent);
-                            }
+                            int id = currentIdLong.intValue();
+                            id = id + 1;
+                            childRefId.setValue(id);
+                            newBarber.setId(id-1);
+                            childRef.child("ID").setValue(newBarber.getId());
+                            flag = true;
+                            Bundle bundle = new Bundle();
+                            bundle.putBoolean("flag", flag);
+                            Intent intent = new Intent(AddBarberActivity.this, MapsActivity.class);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+
                         }
 
                         @Override

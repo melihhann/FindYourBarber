@@ -23,7 +23,7 @@
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="Berber Ismi Gelecek!">
+            app:title="@+id/barberName_editText">
 
         </android.support.v7.widget.Toolbar>
 

@@ -31,15 +31,22 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDpmA1CnLvYPoF5hMz8PhF4dGXZn5wSZBc" />
 
-        <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps">
+
+        <activity android:name=".LoginActivity"
+            android:parentActivityName=".MapsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.agadimaganda.findyourownbarber.MapsActivity" />
         </activity>
+        <activity android:name=".SignUpActivity"></activity>
+        <activity
+            android:name=".MapsActivity"></activity> <!-- android:label="@string/title_activity_maps" -->
         <activity
             android:name=".ProfileActivity"
             android:label="@string/title_activity_profile"
@@ -49,7 +56,7 @@
             android:label="@string/title_activity_settings"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AddBarberActivity" />
-        <activity android:name=".BarberViewActivity"></activity>
+        <activity android:name=".BarberViewActivity" />
     </application>
 
 </manifest>

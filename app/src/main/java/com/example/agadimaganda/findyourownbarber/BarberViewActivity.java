@@ -1,16 +1,20 @@
 package com.example.agadimaganda.findyourownbarber;
 
 import android.content.Intent;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toolbar;
 
 public class BarberViewActivity extends AppCompatActivity {
 
     private SectionsPageAdapter sectionPageAdapter;
     private ViewPager viewPager;
+    private Barber barber = new Barber();
+    private android.support.v7.widget.Toolbar barberNameToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +25,27 @@ public class BarberViewActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.container);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+        barberNameToolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+
+
+        //MapsActivity'den gelen bilgileri alma.
+        Intent intent = getIntent();
+        Bundle bundle = getIntent().getExtras();
+        if (intent != null && bundle != null) {
+            //isNewBarberAdded = bundle.getBoolean("flag");
+            barber.setBarberName(bundle.getString("barberName"));
+            barber.setLatitude(bundle.getDouble("latitude"));
+            barber.setLongitude(bundle.getDouble("longitude"));
+            barber.setId(bundle.getInt("id"));
+            barber.setCity(bundle.getString("city"));
+        }
+
+        if(barber != null){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                barberNameToolbar.setTitle(barber.getBarberName());
+            }
+        }
+
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
