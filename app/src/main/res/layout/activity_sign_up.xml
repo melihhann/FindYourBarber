@@ -7,18 +7,61 @@
     tools:context="com.example.agadimaganda.findyourownbarber.SignUpActivity">
 
     <EditText
+        android:id="@+id/nameField"
+        android:layout_width="413dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="11dp"
+        android:ems="10"
+        android:hint="Ad"
+        android:inputType="text"
+        tools:layout_editor_absoluteX="-20dp"
+        tools:layout_editor_absoluteY="39dp" />
+
+    <EditText
+        android:id="@+id/lastnameField"
+        android:layout_width="413dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/nameField"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:hint="Soyad"
+        android:inputType="text"
+        tools:layout_editor_absoluteX="-20dp"
+        tools:layout_editor_absoluteY="39dp" />
+
+    <EditText
+        android:id="@+id/ageField"
+        android:layout_width="413dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/lastnameField"
+        android:layout_marginTop="11dp"
+        android:ems="10"
+        android:hint="Yaş"
+        android:inputType="number"
+        tools:layout_editor_absoluteX="-20dp"
+        tools:layout_editor_absoluteY="39dp" />
+
+    <EditText
         android:id="@+id/emailField"
         android:layout_width="396dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="28dp"
+        android:layout_below="@+id/ageField"
+        android:layout_marginTop="12dp"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="0dp" />
+
 
     <EditText
         android:id="@+id/passwordField"
@@ -26,8 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/emailField"
-        android:layout_marginTop="36dp"
+        android:layout_centerVertical="true"
         android:ems="10"
         android:hint="Şifre"
         android:inputType="textPassword"
@@ -41,7 +83,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/passwordField"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="11dp"
         android:ems="10"
         android:hint="Şifre Tekrar"
         android:inputType="textPassword"
@@ -52,9 +94,9 @@
         android:id="@+id/signInBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/passwordAgainField"
+        android:layout_alignBottom="@+id/backToLoginField"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="98dp"
+        android:layout_marginBottom="30dp"
         android:text="KAYDOL"
         tools:layout_editor_absoluteX="148dp"
         tools:layout_editor_absoluteY="118dp" />
@@ -63,10 +105,10 @@
         android:id="@+id/backToLoginField"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/signInBtn"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="53dp"
-        android:text="Hesabınız var mı? Giriş yapın."
-        android:onClick="backToLogin"/>
+        android:layout_marginBottom="29dp"
+        android:onClick="backToLogin"
+        android:text="Hesabınız var mı? Giriş yapın." />
 
 </RelativeLayout>

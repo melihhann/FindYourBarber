@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,14 +20,19 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
 
+    //User Interface
     private EditText emailField;
     private EditText passwordField;
     private Button loginBtn;
+    private CheckBox checkBox;
 
+    //Firebase Connection
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authStateListener;
 
+    //Variables
     private Boolean userFromSignIn = false;
+    private Boolean keepMeSignedIn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         emailField = (EditText) findViewById(R.id.emailField);
         passwordField = (EditText) findViewById(R.id.passwordField);
         loginBtn = (Button) findViewById(R.id.loginBtn);
+        checkBox = (CheckBox) findViewById(R.id.keepMeSignedIn);
 
         Intent intent = getIntent();
         Bundle bundle = getIntent().getExtras();
@@ -49,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 startLogin();
             }
         });
@@ -60,6 +68,9 @@ public class LoginActivity extends AppCompatActivity {
                 if(firebaseAuth.getCurrentUser() != null && !userFromSignIn){
                     //firebaseAuth.getCurrentUser().delete();
                     Intent intent2 = new Intent(LoginActivity.this, MapsActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("keepMeSignedIn", keepMeSignedIn);
+                    intent2.putExtras(bundle);
                     startActivity(intent2);
                 }else if(userFromSignIn){
                     userFromSignIn = false;

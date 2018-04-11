@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -14,19 +15,37 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class SignUpActivity extends AppCompatActivity {
 
+    //User Interface
     private EditText emailField;
     private EditText passwordField;
     private EditText passwordAgainField;
     private Button signInBtn;
-    private FirebaseAuth auth;
+    private EditText nameField;
+    private EditText lastnameField;
+    private EditText ageField;
 
+    //Variables
     private Boolean userFromSignIn = true;
     private String email;
     private String password;
     private String passwordAgain;
+    private String name;
+    private String lastname;
+    private int age;
+    private int userId;
+
+
+    //Firebase
+    private FirebaseAuth auth;
+    private DatabaseReference databaseReference;
 
 // TODO: 10.04.2018 username alanı eklenecek. Username ve mail adresleri daha önceden kullanılmış mı diye database'ten arama yapılacak.
 
@@ -38,13 +57,16 @@ public class SignUpActivity extends AppCompatActivity {
         emailField = (EditText) findViewById(R.id.emailField);
         passwordField = (EditText) findViewById(R.id.passwordField);
         passwordAgainField = (EditText) findViewById(R.id.passwordAgainField);
+        nameField = (EditText) findViewById(R.id.nameField);
+        lastnameField = (EditText) findViewById(R.id.lastnameField);
+        ageField = (EditText) findViewById(R.id.ageField);
         signInBtn = (Button) findViewById(R.id.signInBtn);
-
 
 
         signInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 registerUser();
             }
         });
@@ -58,6 +80,10 @@ public class SignUpActivity extends AppCompatActivity {
         email = emailField.getText().toString().trim();
         password = passwordField.getText().toString().trim();
         passwordAgain = passwordAgainField.getText().toString().trim();
+        name = nameField.getText().toString().trim();
+        lastname = lastnameField.getText().toString().trim();
+        age = Integer.parseInt(ageField.getText().toString());
+
 
         if(email.isEmpty()){
             emailField.setError("Email Gerekli!");
@@ -100,7 +126,35 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    //task.getResult();
+
+                    //Firebase connection kullanici yarat.
+                    databaseReference = FirebaseDatabase.getInstance().getReference();
+
+                    final DatabaseReference childRefId = databaseReference.child("LASTUSERID");
+
+                    childRefId.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            Long currentUserIdLong = (Long) dataSnapshot.getValue();
+                            int id = currentUserIdLong.intValue();
+                            id = id + 1;
+                            childRefId.setValue(id);
+                            userId = id-1;
+                            final DatabaseReference childRef = databaseReference.child("USERS").child(String.valueOf(userId));
+                            Long ageLong = Long.valueOf(age);
+                            childRef.child("NAME").setValue(name);
+                            childRef.child("LASTNAME").setValue(lastname);
+                            childRef.child("EMAIL").setValue(email);
+                            childRef.child("AGE").setValue(ageLong);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
                     Toast.makeText(getApplicationContext(), "Kullanıcı oluşturma başarılı oldu", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
                     Bundle bundle = new Bundle();

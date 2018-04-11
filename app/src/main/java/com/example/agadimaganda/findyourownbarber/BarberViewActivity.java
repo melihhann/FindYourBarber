@@ -23,6 +23,7 @@ public class BarberViewActivity extends AppCompatActivity {
 
         sectionPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.container);
+        setupViewPager(viewPager);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         barberNameToolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
@@ -69,7 +70,6 @@ public class BarberViewActivity extends AppCompatActivity {
                                     viewPager.getCurrentItem());
                     if(fragment != null){
                         Intent intent = new Intent(BarberViewActivity.this, CommentsFragment.class);
-                        Bundle bundle = new Bundle();
                     }
                 }
                 else if(position == 2){
@@ -93,9 +93,9 @@ public class BarberViewActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());
-        adapter.addFragment(new DetailsFragment(), "details");
-        adapter.addFragment(new CommentsFragment(), "comments");
-        adapter.addFragment(new MediaFragment(), "media");
+        adapter.addFragment(new DetailsFragment(), "detaylar");
+        adapter.addFragment(new CommentsFragment(), "yorumlar");
+        adapter.addFragment(new MediaFragment(), "medya");
         viewPager.setAdapter(adapter);
     }
 }

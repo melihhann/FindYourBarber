@@ -54,4 +54,15 @@
         android:layout_marginTop="53dp"
         android:text="Hesabınız yok mu? Kaydolun."
         android:onClick="signUp"/>
+
+    <CheckBox
+        android:id="@+id/keepMeSignedIn"
+        android:checked="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/passwordField"
+        android:layout_marginTop="22dp"
+        android:layout_toLeftOf="@+id/signUpField"
+        android:layout_toStartOf="@+id/signUpField"
+        android:text="Bağlı Kal" />
 </RelativeLayout>
