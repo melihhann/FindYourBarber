@@ -10,6 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.firebase.client.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,8 +28,19 @@ public class UserDetailsFragment extends Fragment {
     private static final String TAG = "userDetailsFragment";
     private TextView emailTextView;
     private TextView ageTextView;
-    private int age;
+
+    //Firebase Connection
+    private DatabaseReference databaseReference;
+    private FirebaseAuth auth;
+    private FirebaseAuth.AuthStateListener authStateListener;
+
+    //Variables
+    private  String name;
+    private String lastname;
     private String email;
+    private int age;
+    private String stringAge;
+
 
 
     @Nullable
@@ -31,8 +50,6 @@ public class UserDetailsFragment extends Fragment {
         emailTextView =  (TextView) view.findViewById(R.id.emailTextView);
         ageTextView = (TextView) view.findViewById(R.id.ageTextView);
 
-        emailTextView.setText("Email");
-        ageTextView.setText("Age");
         return view;
 
 
@@ -43,14 +60,40 @@ public class UserDetailsFragment extends Fragment {
         Intent intent = getActivity().getIntent();
         Bundle bundle = getActivity().getIntent().getExtras();
 
-        if(intent != null && bundle != null){
-            email = bundle.getString("email");
-            age = bundle.getInt("age");
+        auth = FirebaseAuth.getInstance();
+        email = auth.getCurrentUser().getEmail();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference childRef = databaseReference.child("USERS");
+
+
+        // TODO: 11.04.2018 BUNA GIRMIYOR.
+
+        if(email != null ){
+            childRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                        String userEmailComp = (String) snapshot.child("EMAIL").getValue();
+
+                        if(userEmailComp.equalsIgnoreCase(email)){
+                            name = (String) snapshot.child("NAME").getValue();
+                            lastname = (String) snapshot.child("LASTNAME").getValue();
+                            Long userAgeLong = (Long) snapshot.child("AGE").getValue();
+                            age = userAgeLong.intValue();
+                            stringAge = String.valueOf(age);
+                            emailTextView.setText(email);
+                            ageTextView.setText(stringAge);
+                            break;
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
-
-
-
-
     }
 
 }

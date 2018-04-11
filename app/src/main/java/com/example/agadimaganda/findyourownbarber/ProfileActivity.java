@@ -63,17 +63,14 @@ public class ProfileActivity extends AppCompatActivity {
 
         Firebase.setAndroidContext(this);
         auth = FirebaseAuth.getInstance();
+        email = auth.getCurrentUser().getEmail();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         final DatabaseReference childRef = databaseReference.child("USERS");
 
 
-        // TODO: 11.04.2018 BUNA GIRMIYOR. 
-        authStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(firebaseAuth.getCurrentUser() != null ){
-                    email = firebaseAuth.getCurrentUser().getEmail();
-
+        // TODO: 11.04.2018 BUNA GIRMIYOR.
+            /*
+                if(email != null ){
                     childRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -84,8 +81,9 @@ public class ProfileActivity extends AppCompatActivity {
                                 if(userEmailComp.equalsIgnoreCase(email)){
                                     name = (String) snapshot.child("NAME").getValue();
                                     lastname = (String) snapshot.child("LASTNAME").getValue();
-                                    Long userAgeLong = (Long) dataSnapshot.getValue();
+                                    Long userAgeLong = (Long) snapshot.child("AGE").getValue();
                                     age = userAgeLong.intValue();
+                                    break;
                                 }
                             }
                         }
@@ -95,10 +93,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                         }
                     });
-                }
-            }
-        };
-
+                }*/
 
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -115,11 +110,6 @@ public class ProfileActivity extends AppCompatActivity {
                                     viewPager.getCurrentItem());
                     if(fragment != null){
                         Intent intent = new Intent(ProfileActivity.this, UserDetailsFragment.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("email", email);
-                        bundle.putInt("age", age);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
                     }
                 }
                 else if(position == 1){
@@ -128,7 +118,6 @@ public class ProfileActivity extends AppCompatActivity {
                                     viewPager.getCurrentItem());
                     if(fragment != null){
                         Intent intent = new Intent(ProfileActivity.this, UserCommentsFragment.class);
-                        Bundle bundle = new Bundle();
                     }
                 }
             }
