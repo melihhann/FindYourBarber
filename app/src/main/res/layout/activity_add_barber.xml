@@ -11,10 +11,9 @@
         android:id="@+id/barberName_editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/latitude_editText"
         android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/latitude_editText"
-        android:layout_marginTop="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="49dp"
         android:ems="10"
         android:gravity="center_vertical"
         android:hint="Barber Name"
@@ -22,61 +21,37 @@
         tools:layout_editor_absoluteX="43dp"
         tools:layout_editor_absoluteY="45dp" />
 
-    <EditText
-        android:id="@+id/latitude_editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/longitude_editText"
-        android:layout_alignStart="@+id/longitude_editText"
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:layout_alignEnd="@+id/addBarber"
+        android:layout_alignLeft="@+id/addBarber"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/addBarber"
+        android:layout_alignStart="@+id/addBarber"
         android:layout_below="@+id/barberName_editText"
-        android:layout_marginTop="42dp"
-        android:ems="10"
-        android:hint="Latitude"
-        android:inputType="numberDecimal"
-        tools:layout_editor_absoluteX="43dp"
-        tools:layout_editor_absoluteY="116dp" />
-
-    <EditText
-        android:id="@+id/longitude_editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/latitude_editText"
-        android:layout_marginLeft="45dp"
-        android:layout_marginStart="45dp"
-        android:layout_marginTop="45dp"
-        android:ems="10"
-        android:hint="Longitude"
-        android:inputType="numberDecimal"
-        tools:layout_editor_absoluteX="43dp"
-        tools:layout_editor_absoluteY="194dp" />
-
-    <EditText
-        android:id="@+id/city_editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/longitude_editText"
-        android:layout_marginLeft="45dp"
-        android:layout_marginStart="45dp"
-        android:layout_marginTop="45dp"
-        android:ems="10"
-        android:hint="City"
-        android:inputType="textPersonName"
-        tools:layout_editor_absoluteX="43dp"
-        tools:layout_editor_absoluteY="194dp" />
-
+        android:layout_marginTop="175dp"
+        android:visibility="visible" />
 
     <Button
         android:id="@+id/saveButtonAction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/city_editText"
+        android:layout_below="@+id/mapView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="46dp"
-        android:text="Create"
+        android:text="Berber Ekle"
         tools:layout_editor_absoluteX="148dp"
         tools:layout_editor_absoluteY="302dp" />
+
+    <TextView
+        android:id="@+id/addBarber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/barberName_editText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:text="Berberi eklemek istediğiniz yere uzun süreli basınız." />
+
 </RelativeLayout>
