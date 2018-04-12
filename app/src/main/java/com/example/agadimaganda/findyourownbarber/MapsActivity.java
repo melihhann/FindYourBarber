@@ -178,6 +178,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 String barberName = (String) snapshot.child("BARBERNAME").getValue();
                 Double latitude = (Double) snapshot.child("LATITUDE").getValue();
                 Double longitude = (Double) snapshot.child("LONGITUDE").getValue();
+                String city = (String)  snapshot.child("CITY").getValue();
                 Long idLong = (Long) snapshot.child("ID").getValue();
 
                         if(idLong != null){
@@ -185,6 +186,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         barber.setBarberName(barberName);
                         barber.setLatitude(latitude);
                         barber.setLongitude(longitude);
+                        barber.setCity(city);
 
                         LatLng newBarberMarker = new LatLng(barber.getLatitude(), barber.getLongitude());
                         marker = mMap.addMarker(new MarkerOptions()
@@ -218,6 +220,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         String barberName = (String) snapshot.child("BARBERNAME").getValue();
                         Double latitude = (Double) snapshot.child("LATITUDE").getValue();
                         Double longitude = (Double) snapshot.child("LONGITUDE").getValue();
+                        String city = (String) snapshot.child("CITY").getValue();
 
                         Barber barber = new Barber();
                         Long idLong  = (Long) snapshot.child("ID").getValue();
@@ -226,6 +229,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 barber.setBarberName(barberName);
                                 barber.setLatitude(latitude);
                                 barber.setLongitude(longitude);
+                                barber.setCity(city);
                                 barberListUpdated.add(barber);
 
                                 if(barberListCurrent.size() < barberListUpdated.size()){

@@ -31,18 +31,6 @@ public class ProfileActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private  SectionsPageAdapter sectionPageAdapter;
 
-    //Firebase Connection
-    private DatabaseReference databaseReference;
-    private FirebaseAuth auth;
-    private FirebaseAuth.AuthStateListener authStateListener;
-
-    //Variables
-    private  String name;
-    private String lastname;
-    private String email;
-    private int age;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,41 +47,6 @@ public class ProfileActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         userNameToolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
-
-
-        Firebase.setAndroidContext(this);
-        auth = FirebaseAuth.getInstance();
-        email = auth.getCurrentUser().getEmail();
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-        final DatabaseReference childRef = databaseReference.child("USERS");
-
-
-        // TODO: 11.04.2018 BUNA GIRMIYOR.
-            /*
-                if(email != null ){
-                    childRef.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                                //String barberName = (String) snapshot.child("BARBERNAME").getValue();
-                                String userEmailComp = (String) snapshot.child("EMAIL").getValue();
-
-                                if(userEmailComp.equalsIgnoreCase(email)){
-                                    name = (String) snapshot.child("NAME").getValue();
-                                    lastname = (String) snapshot.child("LASTNAME").getValue();
-                                    Long userAgeLong = (Long) snapshot.child("AGE").getValue();
-                                    age = userAgeLong.intValue();
-                                    break;
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }*/
 
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

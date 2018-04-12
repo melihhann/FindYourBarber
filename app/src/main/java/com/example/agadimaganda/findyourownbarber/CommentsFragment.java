@@ -20,7 +20,7 @@ public class CommentsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.details, container, false);
+        View view = inflater.inflate(R.layout.comments, container, false);
         return view;
     }
 

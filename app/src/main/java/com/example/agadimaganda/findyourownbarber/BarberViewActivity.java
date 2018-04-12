@@ -60,9 +60,15 @@ public class BarberViewActivity extends AppCompatActivity {
                     DetailsFragment fragment = (DetailsFragment) getSupportFragmentManager()
                             .findFragmentByTag("android:switcher:" + R.id.tabItem+ ":" +
                                     viewPager.getCurrentItem());
-                    if(fragment != null){
+
                         Intent intent = new Intent(BarberViewActivity.this, DetailsFragment.class);
-                    }
+                        Bundle bundle = new Bundle();
+                        bundle.putString("barberName", barber.getBarberName());
+                        bundle.putDouble("latitude", barber.getLatitude());
+                        bundle.putDouble("longitude", barber.getLongitude());
+                        bundle.putString("city", barber.getCity());
+                        intent.putExtras(bundle);
+
                 }
                 else if(position == 1){
                     CommentsFragment fragment = (CommentsFragment) getSupportFragmentManager()
