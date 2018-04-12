@@ -11,15 +11,28 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+
+import com.firebase.client.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
+
+import org.w3c.dom.Text;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    //User Interface
     private BottomNavigationView bottomNavigationView;
+    private TextView logoutTextView;
+    private FirebaseAuth auth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        logoutTextView = (TextView) findViewById(R.id.logoutTextView);
+        logoutTextView.setText("Oturumu Kapat");
+        auth = FirebaseAuth.getInstance();
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
         Menu menu = bottomNavigationView.getMenu();
@@ -52,4 +65,10 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
+
+    public void logout(View view) {
+        auth.signOut();
+        Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
+        startActivity(intent);
+    }
 }
