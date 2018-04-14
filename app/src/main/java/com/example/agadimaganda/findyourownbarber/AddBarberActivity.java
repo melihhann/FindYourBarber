@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -11,15 +12,19 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -30,8 +35,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.Locale;
+//Autocomplete imports
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
-public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCallback, OnConnectionFailedListener {
 
     //Database
     private DatabaseReference mRef;
@@ -56,6 +65,10 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
     private Boolean flag = false;
     private BitmapDescriptorFactory bitmapDescriptorFactory;
     private Boolean isMarkerAdded = false;
+    private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
+    private GoogleApiClient mGoogleApiClient;
+    private LatLngBounds Lat_Long_Bounds = new LatLngBounds(new LatLng(36,24),new LatLng(42,25));
+    private AutoCompleteTextView AutocompleteTextView;
 
 
 
@@ -64,6 +77,18 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_barber);
+
+        //AutoComplete Stuff, doldur bosalt in text-field-Vra
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(this, this)
+                .build();
+        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(this,mGoogleApiClient,Lat_Long_Bounds,null);
+        AutocompleteTextView = (AutoCompleteTextView) findViewById(R.id.autocomplete_textView);
+        AutocompleteTextView.setAdapter(mPlaceAutocompleteAdapter);
+
 
 
         mapView = (MapView) findViewById(R.id.mapView);
@@ -189,5 +214,10 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }

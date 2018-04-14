@@ -21,6 +21,16 @@
         tools:layout_editor_absoluteX="43dp"
         tools:layout_editor_absoluteY="45dp" />
 
+    <AutoCompleteTextView
+        android:id="@+id/autocomplete_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/barberName_editText"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_vertical"
+        android:hint="Adres, cadde, sokak..."
+        android:layout_marginTop="5dp"
+        android:ems="10"/>
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="300dp"
