@@ -86,8 +86,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void startLogin(){
 
-        String email = emailField.getText().toString();
-        String password = passwordField.getText().toString();
+        final String email = emailField.getText().toString();
+        final String password = passwordField.getText().toString();
 
         if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)){
             Toast.makeText(LoginActivity.this, "Email veya Sifre bos.", Toast.LENGTH_LONG).show();

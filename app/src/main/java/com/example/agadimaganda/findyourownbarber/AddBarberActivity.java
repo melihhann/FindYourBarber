@@ -94,8 +94,7 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
-        // Gets to GoogleMap from the MapView and does initialization stuff
-        mapView.getMapAsync(this);//
+        mapView.getMapAsync(this);
 
         button =  findViewById(R.id.saveButtonAction);
         barberNameEditText = findViewById(R.id.barberName_editText);
@@ -147,7 +146,7 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
 
 
                     marker.remove();
-                    barberNameEditText.setText(""); 
+                    barberNameEditText.setText("");
                 }
 
         });

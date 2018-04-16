@@ -2,6 +2,7 @@ package com.example.agadimaganda.findyourownbarber;
 
 import android.content.Intent;
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -9,12 +10,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toolbar;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 public class BarberViewActivity extends AppCompatActivity {
 
+    //User Interface
     private SectionsPageAdapter sectionPageAdapter;
     private ViewPager viewPager;
-    private Barber barber = new Barber();
     private android.support.v7.widget.Toolbar barberNameToolbar;
+
+    //Classes
+    private Barber barber = new Barber();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +38,6 @@ public class BarberViewActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         barberNameToolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
-
 
         //MapsActivity'den gelen bilgileri alma.
         Intent intent = getIntent();
@@ -46,6 +56,8 @@ public class BarberViewActivity extends AppCompatActivity {
                 barberNameToolbar.setTitle(barber.getBarberName());
             }
         }
+
+
 
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -82,9 +94,16 @@ public class BarberViewActivity extends AppCompatActivity {
                     MediaFragment fragment = (MediaFragment) getSupportFragmentManager()
                             .findFragmentByTag("android:switcher:" + R.id.tabItem3 + ":" +
                                     viewPager.getCurrentItem());
-                    if(fragment != null){
+
                         Intent intent = new Intent(BarberViewActivity.this, MediaFragment.class);
-                    }
+                        Bundle bundle = new Bundle();
+                        bundle.putString("barberName", barber.getBarberName());
+                        bundle.putDouble("latitude", barber.getLatitude());
+                        bundle.putDouble("longitude", barber.getLongitude());
+                        bundle.putString("city", barber.getCity());
+                        intent.putExtras(bundle);
+
+
                 }
             }
 
