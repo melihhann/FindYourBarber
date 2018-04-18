@@ -98,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
 
                     if(!task.isSuccessful()){
-                        Toast.makeText(LoginActivity.this, "Oyle bir kullanici yok.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginActivity.this, task.getException().toString(), Toast.LENGTH_LONG).show();
                     }
                 }
             });

@@ -88,13 +88,14 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
         mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(this,mGoogleApiClient,Lat_Long_Bounds,null);
         AutocompleteTextView = (AutoCompleteTextView) findViewById(R.id.autocomplete_textView);
         AutocompleteTextView.setAdapter(mPlaceAutocompleteAdapter);
+        //AutoComplete Stuff, doldur bosalt in text-field-Vra
 
 
 
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
-        mapView.getMapAsync(this);
+        mapView.getMapAsync(this);//
 
         button =  findViewById(R.id.saveButtonAction);
         barberNameEditText = findViewById(R.id.barberName_editText);
@@ -146,7 +147,7 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
 
 
                     marker.remove();
-                    barberNameEditText.setText("");
+                    barberNameEditText.setText(""); 
                 }
 
         });
