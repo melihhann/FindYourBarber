@@ -6,9 +6,12 @@ import android.content.Intent;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -31,6 +35,8 @@ import com.squareup.picasso.Picasso;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -41,14 +47,18 @@ public class MediaFragment extends Fragment {
     private static final String TAG = "DetailsFragment";
     private static final int CAMERA_REQUEST_CODE = 1;
     private static final int GALLERY_INTENT = 2;
-    private static final int PICK_IMAGE_REQUEST = 3;
     private String userId;
+    private Boolean flag = false;
+    private int counter = 0;
 
     //User Interface
     private Button fileUploadButton;
     private ProgressDialog progressDialog;
     private Button uploadFromCamera;
-    private ImageView imageView;
+    private RecyclerView recyclerView;
+    private ImageAdapter imageAdapter;
+    private List<Upload> uploadList;
+
 
     //Database connection
     private StorageReference storageReference;
@@ -70,6 +80,8 @@ public class MediaFragment extends Fragment {
 
         auth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        storageReference = FirebaseStorage.getInstance().getReference();
+        auth = FirebaseAuth.getInstance();
         DatabaseReference childRef = databaseReference.child("USERS");
 
         childRef.addValueEventListener(new ValueEventListener() {
@@ -106,16 +118,14 @@ public class MediaFragment extends Fragment {
 
         progressDialog = new ProgressDialog(getActivity());
         uploadFromCamera = view.findViewById(R.id.uploadFromCamera);
-        imageView = view.findViewById(R.id.imageView);
         fileUploadButton = view.findViewById(R.id.fileUpload);
         fileUploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                flag = true;
                 Intent intent = new Intent(Intent.ACTION_PICK);
-
                 intent.setType("image/*");
-
                 startActivityForResult(intent, GALLERY_INTENT);
             }
         });
@@ -126,11 +136,42 @@ public class MediaFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
+                flag = true;
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent, CAMERA_REQUEST_CODE);
             }
         });
 
+
+        //Database'de olan fotoğrafları gösterme
+        recyclerView = view.findViewById(R.id.recycleListView); 
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        uploadList = new ArrayList<>();
+
+        DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase()).child("IMAGES");
+
+        childReferance.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                   // Upload upload = snapshot.getValue(Upload.class);
+                    Upload upload = new Upload();
+                    //upload.setImageUrl(snapshot.getChildren());
+                    // TODO: 18.04.2018 ArrayList olarak çekiyor. Bütün kullanıcıların yolladığı fotoğrafları alamıyorum. 
+                    uploadList.add(upload); 
+                }
+
+                imageAdapter = new ImageAdapter(getActivity(), uploadList);
+                recyclerView.setAdapter(imageAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         return view;
     }
@@ -139,8 +180,6 @@ public class MediaFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         Intent intent = getActivity().getIntent();
-        storageReference = FirebaseStorage.getInstance().getReference();
-        auth = FirebaseAuth.getInstance();
 
     }
 
@@ -161,7 +200,27 @@ public class MediaFragment extends Fragment {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                    Picasso.with(getActivity()).load(uri).into(imageView);
+                    final Upload upload = new Upload();
+                    upload.setImageUrl(taskSnapshot.getDownloadUrl().toString());
+                    final DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase()).child("IMAGES").child(userId);
+
+                    if(flag){
+                        childReferance.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                childReferance.child(String.valueOf(counter)).setValue(upload.getImageUrl());
+                                counter++;
+                                flag = false;
+                                // TODO: 18.04.2018 2 kere dönüyor, veya daha fazla. Ama kesinlikle 1 kereden fazla dönüyor.
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+
                     Toast.makeText(getActivity(), "Fotoğraf Yükleme Tamamlandı.", Toast.LENGTH_LONG).show();
                     progressDialog.dismiss();
                 }
@@ -180,6 +239,24 @@ public class MediaFragment extends Fragment {
             filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    final Upload upload = new Upload(taskSnapshot.getDownloadUrl().toString());
+                    final DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase()).child("IMAGES").child(userId);
+
+                    if(flag){
+                        childReferance.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                childReferance.child("imageUrl").setValue(upload.getImageUrl());
+                                flag = false;
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
 
                     Toast.makeText(getActivity(), "Fotoğraf Yükleme Tamamlandı.", Toast.LENGTH_LONG).show();
                     progressDialog.dismiss();
