@@ -28,12 +28,11 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycleListView"
         android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
+        android:layout_height="420dp"
+        android:layout_alignEnd="@+id/uploadFromCamera"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/fileUpload"
-        android:layout_marginTop="25dp"></android.support.v7.widget.RecyclerView>
+        android:layout_alignRight="@+id/uploadFromCamera"
+        android:layout_below="@+id/fileUpload"></android.support.v7.widget.RecyclerView>
+    
 </RelativeLayout>
