@@ -23,10 +23,12 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -45,7 +47,7 @@ import static android.app.Activity.RESULT_OK;
 public class MediaFragment extends Fragment {
 
     //Variables
-    private static final String TAG = "DetailsFragment";
+    private static final String TAG = "MediaFragment";
     private static final int CAMERA_REQUEST_CODE = 1;
     private static final int GALLERY_REQUEST_CODE = 2;
     private String userId;
@@ -82,29 +84,7 @@ public class MediaFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         DatabaseReference childRef = databaseReference.child("USERS");
 
-        childRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-
-                    String userEmail = (String) snapshot.child("EMAIL").getValue();
-
-                    if(userEmail.equalsIgnoreCase(auth.getCurrentUser().getEmail())){
-
-                        String userIdString = (String) snapshot.getKey();
-
-                        userId = userIdString;
-                        break;
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        userId = auth.getCurrentUser().getUid();
 
         if(intent != null && bundle != null){
             barber.setBarberName(bundle.getString("barberName"));
@@ -146,7 +126,7 @@ public class MediaFragment extends Fragment {
 
         uploadList = new ArrayList<>();
 
-        final DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase()).child("IMAGES");
+        final DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("IMAGES");
 
         childReferance.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -163,7 +143,7 @@ public class MediaFragment extends Fragment {
                             for(DataSnapshot snapshot1 : dataSnapshot.getChildren()){
                                 String imageUrl = String.valueOf(snapshot1.getValue());
                                 final Upload upload = new Upload();
-                                upload.setImageUrl(imageUrl); 
+                                upload.setImageUrl(imageUrl);
                                 uploadList.add(upload);
                             }
                             imageAdapter = new ImageAdapter(getActivity(), uploadList);
@@ -175,10 +155,7 @@ public class MediaFragment extends Fragment {
 
                         }
                     });
-
-                    // TODO: 18.04.2018 Fotolar alınıyor fakat büyük boyuttakileri yükleyemiyor.
                 }
-
             }
 
             @Override
@@ -208,7 +185,7 @@ public class MediaFragment extends Fragment {
 
             final Uri uri = data.getData();
 
-            StorageReference filePath = storageReference.child(barber.getBarberName()).child(userId).child(uri.getLastPathSegment());
+            StorageReference filePath = storageReference.child(barber.getBarberName().toUpperCase().replace(" ", "")).child(userId).child(uri.getLastPathSegment());
 
             filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -216,7 +193,7 @@ public class MediaFragment extends Fragment {
 
                     final Upload upload = new Upload();
                     upload.setImageUrl(taskSnapshot.getDownloadUrl().toString());
-                    final DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase()).child("IMAGES").child(userId);
+                    final DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ", "")).child("IMAGES").child(userId);
 
                     childReferance.push().setValue(upload.getImageUrl());
                     // TODO: 19.04.2018 Son image kesik olarak çıkıyor.
@@ -236,7 +213,7 @@ public class MediaFragment extends Fragment {
 
             Uri uri = data.getData();
 
-            StorageReference filePath = storageReference.child(barber.getBarberName()).child(userId).child(uri.getLastPathSegment());
+            StorageReference filePath = storageReference.child(barber.getBarberName().toUpperCase().replace(" ", "")).child(userId).child(uri.getLastPathSegment());
 
             filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -244,7 +221,7 @@ public class MediaFragment extends Fragment {
 
                     final Upload upload = new Upload();
                     upload.setImageUrl(taskSnapshot.getDownloadUrl().toString());
-                    final DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase()).child("IMAGES").child(userId);
+                    final DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ", "")).child("IMAGES").child(userId);
 
                     childReferance.push().setValue(upload.getImageUrl());
 

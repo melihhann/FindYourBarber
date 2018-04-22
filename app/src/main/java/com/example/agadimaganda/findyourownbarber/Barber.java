@@ -1,6 +1,7 @@
 package com.example.agadimaganda.findyourownbarber;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Aga diMaganda on 7.02.2018.
@@ -18,6 +19,7 @@ public class Barber {
     private ArrayList<Double> HCStyleRateList = new ArrayList<>();
     private Double barberRate;
     private String city;
+    private List<Comment> commentList;
 
     public Barber(Object tag) {
     }
@@ -25,6 +27,16 @@ public class Barber {
     public Barber(){
 
     }
+
+    public Barber(String barberName, Double latitude, Double longitude, String city, List<Comment> commentList){
+
+        this.barberName = barberName;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.city = city;
+        this.commentList = commentList;
+    }
+
 
     public int getId(){
         return id;
@@ -94,6 +106,13 @@ public class Barber {
     }
     public void setCity(String city){
         this.city = city;
+    }
+
+    public List<Comment> getCommentList(){
+        return commentList;
+    }
+    public void setCommentList(List<Comment> commentList){
+        this.commentList = commentList;
     }
 
 }

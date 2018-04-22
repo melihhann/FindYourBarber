@@ -40,7 +40,6 @@ public class SignUpActivity extends AppCompatActivity {
     private String name;
     private String lastname;
     private int age;
-    private int userId;
 
 
     //Firebase
@@ -130,30 +129,16 @@ public class SignUpActivity extends AppCompatActivity {
                     //Firebase connection kullanici yarat.
                     databaseReference = FirebaseDatabase.getInstance().getReference();
 
-                    final DatabaseReference childRefId = databaseReference.child("LASTUSERID");
 
-                    childRefId.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
+                    String userId = auth.getCurrentUser().getUid();
+                    final DatabaseReference childRef = databaseReference.child("USERS").child(String.valueOf(userId));
+                    Long ageLong = Long.valueOf(age);
+                    childRef.child("NAME").setValue(name);
+                    childRef.child("LASTNAME").setValue(lastname);
+                    childRef.child("EMAIL").setValue(email);
+                    childRef.child("AGE").setValue(ageLong);
 
-                            Long currentUserIdLong = (Long) dataSnapshot.getValue();
-                            int id = currentUserIdLong.intValue();
-                            id = id + 1;
-                            childRefId.setValue(id);
-                            userId = id-1;
-                            final DatabaseReference childRef = databaseReference.child("USERS").child(String.valueOf(userId));
-                            Long ageLong = Long.valueOf(age);
-                            childRef.child("NAME").setValue(name);
-                            childRef.child("LASTNAME").setValue(lastname);
-                            childRef.child("EMAIL").setValue(email);
-                            childRef.child("AGE").setValue(ageLong);
-                        }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
 
                     Toast.makeText(getApplicationContext(), "Kullanıcı oluşturma başarılı oldu", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);

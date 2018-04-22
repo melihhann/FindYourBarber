@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relLayout1"
+        android:layout_marginTop="15sp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="60dp"
+            android:layout_marginBottom="30dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="En iyi berber Kadir Abi'dir."
+                android:layout_marginLeft="15dp"
+                android:textColor="@color/colorBlack"
+                android:id="@+id/comment"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="7 yıl önce"
+                android:layout_marginLeft="15dp"
+                android:textColor="@color/colorBlack"
+                android:textSize="13sp"
+                android:textStyle="italic"
+                android:id="@+id/comment_time_posted"
+                android:layout_marginTop="15dp"
+                android:layout_below="@id/comment"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="31 beğeni"
+                android:layout_marginLeft="15dp"
+                android:textColor="@color/colorBlack"
+                android:textSize="13sp"
+                android:textStyle="italic"
+                android:id="@+id/comment_likes"
+                android:layout_marginTop="15dp"
+                android:layout_below="@id/comment"
+                android:layout_toRightOf="@id/comment_time_posted"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cevapla"
+                android:layout_marginLeft="15dp"
+                android:textColor="@color/colorBlack"
+                android:textSize="13sp"
+                android:textStyle="italic"
+                android:id="@+id/comment_reply"
+                android:layout_marginTop="15dp"
+                android:layout_below="@id/comment"
+                android:layout_toRightOf="@id/comment_likes"/>
+
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:id="@+id/comment_like"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/makasufakbuyukufak"
+            android:layout_centerVertical="true" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
