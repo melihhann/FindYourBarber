@@ -7,10 +7,12 @@ package com.example.agadimaganda.findyourownbarber;
 public class Like {
 
     private String userId;
+    private Comment comment;
 
 
-    public Like(String userId) {
+    public Like(String userId, Comment comment) {
         this.userId = userId;
+        this.comment = comment;
     }
 
     public Like() {
@@ -24,6 +26,13 @@ public class Like {
         this.userId = userId;
     }
 
+    public Comment getComment(){
+        return comment;
+    }
+
+    public void setComment(Comment comment){
+        this.comment = comment;
+    }
 
     @Override
     public String toString() {

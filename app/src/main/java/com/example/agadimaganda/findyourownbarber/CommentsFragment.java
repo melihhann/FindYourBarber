@@ -78,6 +78,7 @@ public class CommentsFragment extends Fragment {
         }
 
 
+
         postComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,7 +93,7 @@ public class CommentsFragment extends Fragment {
         });
 
         userId = auth.getCurrentUser().getUid();
-        final DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("COMMENTS");
+        //final DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("COMMENTS");
         // TODO: 22.04.2018 Yorum yapıldığı zaman sayfa otomatik olarak yenileniyor ve yeni yorum gözüküyor. Başka kullanıcı yorum atarken diğer kullanıcının sayfası yenileniyor mu ona bakmak lazım.
         databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("COMMENTS").child(userId).addChildEventListener(new ChildEventListener() {
             @Override
@@ -102,10 +103,10 @@ public class CommentsFragment extends Fragment {
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        commentArrayList.clear();
                         for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-
-                            String userId = snapshot.getKey();
-                            commentArrayList.clear();
+                            //commentArrayList.clear();
+                            //String userId = snapshot.getKey();
 
                             for(DataSnapshot snapshotChild : snapshot.getChildren()){
                                 Comment comment = new Comment();
