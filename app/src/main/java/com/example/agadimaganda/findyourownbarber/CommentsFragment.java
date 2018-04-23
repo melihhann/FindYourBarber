@@ -77,6 +77,20 @@ public class CommentsFragment extends Fragment {
             barber.setCity(bundle.getString("city"));
         }
 
+
+        postComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!comment.getText().toString().equals("")){
+                    addNewComment(comment.getText().toString());
+                    comment.setText("");
+                    closeKeyboard();
+                }else{
+                    Toast.makeText(getActivity(), "Boş yorum yollayamazsınız.",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         userId = auth.getCurrentUser().getUid();
         final DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("COMMENTS");
         // TODO: 22.04.2018 Yorum yapıldığı zaman sayfa otomatik olarak yenileniyor ve yeni yorum gözüküyor. Başka kullanıcı yorum atarken diğer kullanıcının sayfası yenileniyor mu ona bakmak lazım.
@@ -101,7 +115,10 @@ public class CommentsFragment extends Fragment {
                                 commentArrayList.add(comment);
                             }
 
-                            setupWidgets();
+                            if(getActivity() != null){
+                                CommentListAdapter adapter = new CommentListAdapter(getActivity(), R.layout.layout_comment, commentArrayList);
+                                listView.setAdapter(adapter);
+                            }
                         }
                     }
 
@@ -133,31 +150,9 @@ public class CommentsFragment extends Fragment {
             }
         });
 
-
-        // TODO: 22.04.2018
-
         return view;
     }
 
-    private void setupWidgets(){
-
-        CommentListAdapter adapter = new CommentListAdapter(getActivity(), R.layout.layout_comment, commentArrayList);
-        listView.setAdapter(adapter);
-
-        postComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!comment.getText().toString().equals("")){
-                    addNewComment(comment.getText().toString());
-                    comment.setText("");
-                    closeKeyboard();
-                }else{
-                    Toast.makeText(getActivity(), "Boş yorum yollayamazsınız.",Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
