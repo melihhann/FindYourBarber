@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -19,6 +20,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     private Context context;
     private List<Upload> uploadList;
+    private static final int MAX_WIDTH = 500;
+    private static final int MAX_HEIGHT = 300;
 
     public ImageAdapter(Context mContext, List<Upload> uploads){
         context = mContext;
@@ -35,7 +38,15 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     @Override
     public void onBindViewHolder(ImageViewHolder holder, int position) {
         Upload uploadCurrent = uploadList.get(position);
-        Picasso.with(context).load(uploadCurrent.getImageUrl()).fit().centerCrop().into(holder.imageViewItem);
+
+        int size = (int) Math.ceil(Math.sqrt(MAX_WIDTH * MAX_HEIGHT));
+
+
+        /*Picasso.with(context).load(uploadCurrent.getImageUrl()).transform(new BitmapTransform(MAX_WIDTH, MAX_HEIGHT))
+                .resize(size, size).placeholder(R.mipmap.ic_person_add_black_24dp).centerInside().into(holder.imageViewItem);*/
+
+        Glide.with(context).load(uploadCurrent.getImageUrl()).into(holder.imageViewItem);
+
     }
 
     @Override

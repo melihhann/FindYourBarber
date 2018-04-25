@@ -3,6 +3,7 @@ package com.example.agadimaganda.findyourownbarber;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,10 +23,12 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -44,12 +47,10 @@ import static android.app.Activity.RESULT_OK;
 public class MediaFragment extends Fragment {
 
     //Variables
-    private static final String TAG = "DetailsFragment";
+    private static final String TAG = "MediaFragment";
     private static final int CAMERA_REQUEST_CODE = 1;
-    private static final int GALLERY_INTENT = 2;
+    private static final int GALLERY_REQUEST_CODE = 2;
     private String userId;
-    private Boolean flag = false;
-    private int counter = 0;
 
     //User Interface
     private Button fileUploadButton;
@@ -58,7 +59,6 @@ public class MediaFragment extends Fragment {
     private RecyclerView recyclerView;
     private ImageAdapter imageAdapter;
     private List<Upload> uploadList;
-
 
     //Database connection
     private StorageReference storageReference;
@@ -84,29 +84,7 @@ public class MediaFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         DatabaseReference childRef = databaseReference.child("USERS");
 
-        childRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-
-                    String userEmail = (String) snapshot.child("EMAIL").getValue();
-
-                    if(userEmail.equalsIgnoreCase(auth.getCurrentUser().getEmail())){
-
-                        String userIdString = (String) snapshot.getKey();
-
-                        userId = userIdString;
-                        break;
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        userId = auth.getCurrentUser().getUid();
 
         if(intent != null && bundle != null){
             barber.setBarberName(bundle.getString("barberName"));
@@ -123,10 +101,9 @@ public class MediaFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                flag = true;
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
-                startActivityForResult(intent, GALLERY_INTENT);
+                startActivityForResult(intent, GALLERY_REQUEST_CODE);
             }
         });
 
@@ -136,7 +113,6 @@ public class MediaFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                flag = true;
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent, CAMERA_REQUEST_CODE);
             }
@@ -144,27 +120,42 @@ public class MediaFragment extends Fragment {
 
 
         //Database'de olan fotoğrafları gösterme
-        recyclerView = view.findViewById(R.id.recycleListView); 
+        recyclerView = view.findViewById(R.id.recycleListView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         uploadList = new ArrayList<>();
 
-        DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase()).child("IMAGES");
+        final DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("IMAGES");
 
         childReferance.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                    // Upload upload = snapshot.getValue(Upload.class);
-                    Upload upload = new Upload();
-                    //upload.setImageUrl(snapshot.getChildren());
-                    // TODO: 18.04.2018 ArrayList olarak çekiyor. Bütün kullanıcıların yolladığı fotoğrafları alamıyorum. 
-                    uploadList.add(upload); 
-                }
+                    String key = snapshot.getKey();
 
-                imageAdapter = new ImageAdapter(getActivity(), uploadList);
-                recyclerView.setAdapter(imageAdapter);
+                    DatabaseReference childChild = childReferance.child(key);
+
+                    childChild.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for(DataSnapshot snapshot1 : dataSnapshot.getChildren()){
+                                String imageUrl = String.valueOf(snapshot1.getValue());
+                                final Upload upload = new Upload();
+                                upload.setImageUrl(imageUrl);
+                                uploadList.add(upload);
+                            }
+                            imageAdapter = new ImageAdapter(getActivity(), uploadList);
+                            recyclerView.setAdapter(imageAdapter);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
             }
 
             @Override
@@ -173,28 +164,28 @@ public class MediaFragment extends Fragment {
             }
         });
 
+
         return view;
     }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Intent intent = getActivity().getIntent();
-
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == GALLERY_INTENT && resultCode == RESULT_OK){
+        //HAFIZA
+        if(requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK){
 
             progressDialog.setMessage("Yükleniyor...");
             progressDialog.show();
 
             final Uri uri = data.getData();
 
-            StorageReference filePath = storageReference.child(barber.getBarberName()).child(userId).child(uri.getLastPathSegment());
+            StorageReference filePath = storageReference.child(barber.getBarberName().toUpperCase().replace(" ", "")).child(userId).child(uri.getLastPathSegment());
 
             filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -202,24 +193,10 @@ public class MediaFragment extends Fragment {
 
                     final Upload upload = new Upload();
                     upload.setImageUrl(taskSnapshot.getDownloadUrl().toString());
-                    final DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase()).child("IMAGES").child(userId);
+                    final DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ", "")).child("IMAGES").child(userId);
 
-                    if(flag){
-                        childReferance.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                childReferance.child(String.valueOf(counter)).setValue(upload.getImageUrl());
-                                counter++;
-                                flag = false;
-                                // TODO: 18.04.2018 2 kere dönüyor, veya daha fazla. Ama kesinlikle 1 kereden fazla dönüyor.
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
+                    childReferance.push().setValue(upload.getImageUrl());
+                    // TODO: 19.04.2018 Son image kesik olarak çıkıyor.
 
                     Toast.makeText(getActivity(), "Fotoğraf Yükleme Tamamlandı.", Toast.LENGTH_LONG).show();
                     progressDialog.dismiss();
@@ -227,6 +204,8 @@ public class MediaFragment extends Fragment {
             });
         }
 
+
+        //KAMERA
         if(requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK){
 
             progressDialog.setMessage("Yükleniyor...");
@@ -234,29 +213,17 @@ public class MediaFragment extends Fragment {
 
             Uri uri = data.getData();
 
-            StorageReference filePath = storageReference.child(barber.getBarberName()).child(userId).child(uri.getLastPathSegment());
+            StorageReference filePath = storageReference.child(barber.getBarberName().toUpperCase().replace(" ", "")).child(userId).child(uri.getLastPathSegment());
 
             filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                    final Upload upload = new Upload(taskSnapshot.getDownloadUrl().toString());
-                    final DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase()).child("IMAGES").child(userId);
+                    final Upload upload = new Upload();
+                    upload.setImageUrl(taskSnapshot.getDownloadUrl().toString());
+                    final DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ", "")).child("IMAGES").child(userId);
 
-                    if(flag){
-                        childReferance.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                childReferance.child("imageUrl").setValue(upload.getImageUrl());
-                                flag = false;
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
+                    childReferance.push().setValue(upload.getImageUrl());
 
                     Toast.makeText(getActivity(), "Fotoğraf Yükleme Tamamlandı.", Toast.LENGTH_LONG).show();
                     progressDialog.dismiss();

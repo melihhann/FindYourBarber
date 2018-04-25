@@ -17,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -77,6 +78,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
+        verifyPermissions();
+
         //AddBarberActivity calisti, yeni berber eklendi.
         Intent intent = getIntent();
         Bundle bundle = getIntent().getExtras();
@@ -86,25 +90,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         // TODO: 8.04.2018 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        /*AddBarberActivity'den gelen marker bilgileri
-        Intent intentMarker = getIntent();
-        Bundle bundleMarker = getIntent().getExtras();
-        if (intentMarker != null && bundleMarker != null) {
-            String barberName = bundleMarker.getString("barberName");
-            Double latitude = bundleMarker.getDouble("latitude");
-            Double longitude = bundleMarker.getDouble("longitude");
-            int id = bundleMarker.getInt("id");
-
-            Barber barber = new Barber();
-            barber.setBarberName(barberName);
-            barber.setLatitude(latitude);
-            barber.setLongitude(longitude);
-            barber.setId(id);
-
-            barberList.add(barber);
-
-        }*/
-
 
         //Bottom Navigation View
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
@@ -290,8 +275,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-
-    //Location Permission
+    /*
+    //Eskiden kullanılan Location Permission
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -306,6 +291,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     finish();
                 }
                 break;
+        }
+    }
+    */
+
+
+    //Kamera, Lokasyon ve Hafıza permisyonları
+    private void verifyPermissions(){
+        String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.CAMERA,
+        Manifest.permission.ACCESS_FINE_LOCATION};
+
+        if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                permissions[0]) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                permissions[1]) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                permissions[2]) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                permissions[3]) == PackageManager.PERMISSION_GRANTED){
+        }else{
+            ActivityCompat.requestPermissions(MapsActivity.this, permissions, 1);
         }
     }
 }
