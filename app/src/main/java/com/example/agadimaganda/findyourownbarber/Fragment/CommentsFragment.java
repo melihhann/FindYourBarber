@@ -1,9 +1,7 @@
-package com.example.agadimaganda.findyourownbarber;
+package com.example.agadimaganda.findyourownbarber.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,9 +12,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.agadimaganda.findyourownbarber.Adapter.CommentListAdapter;
+import com.example.agadimaganda.findyourownbarber.Object.Barber;
+import com.example.agadimaganda.findyourownbarber.Object.Comment;
+import com.example.agadimaganda.findyourownbarber.R;
+import com.example.agadimaganda.findyourownbarber.Method.coolMethods;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +29,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class CommentsFragment extends Fragment {
@@ -50,7 +51,7 @@ public class CommentsFragment extends Fragment {
 
     //Classes
     private Barber barber = new Barber();
-    private coolMethods coolMethods = new coolMethods();
+    private com.example.agadimaganda.findyourownbarber.Method.coolMethods coolMethods = new coolMethods();
 
 
 
@@ -95,7 +96,7 @@ public class CommentsFragment extends Fragment {
         userId = auth.getCurrentUser().getUid();
         //final DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("COMMENTS");
         // TODO: 22.04.2018 Yorum yapıldığı zaman sayfa otomatik olarak yenileniyor ve yeni yorum gözüküyor. Başka kullanıcı yorum atarken diğer kullanıcının sayfası yenileniyor mu ona bakmak lazım.
-        databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("COMMENTS").child(userId).addChildEventListener(new ChildEventListener() {
+        databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("COMMENTS").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 //Yorumları sayfada gösterme
@@ -112,6 +113,7 @@ public class CommentsFragment extends Fragment {
                                 Comment comment = new Comment();
                                 comment.setComment(snapshotChild.getValue(Comment.class).getComment());
                                 comment.setDateCreated(snapshotChild.getValue(Comment.class).getDateCreated());
+                                comment.setBarberName(barber.getBarberName());
                                 //comment.setLikes();
                                 commentArrayList.add(comment);
                             }
@@ -163,15 +165,21 @@ public class CommentsFragment extends Fragment {
 
     private void addNewComment(String newComment){
 
-        DatabaseReference childRef = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ", ""));
-
         userId = auth.getCurrentUser().getUid();
+        DatabaseReference childRef = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ", ""));
+        DatabaseReference userChildRef = databaseReference.child("USERS").child(userId);
+
         String commentId  = childRef.child("COMMENTS").child(userId).push().getKey();//userId null geliyor.
         Comment comment = new Comment();
         comment.setComment(newComment);
         comment.setDateCreated(coolMethods.getTimestamp());
+        comment.setBarberName(barber.getBarberName());
 
         childRef.child("COMMENTS").child(userId).child(commentId).setValue(comment);
+        userChildRef.child("COMMENTS").child(commentId).setValue(comment);
+
+
+
     }
 
 

@@ -1,4 +1,6 @@
-package com.example.agadimaganda.findyourownbarber;
+package com.example.agadimaganda.findyourownbarber.Object;
+
+import com.example.agadimaganda.findyourownbarber.Object.Comment;
 
 /**
  * Created by Aga diMaganda on 21.04.2018.

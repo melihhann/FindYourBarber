@@ -1,4 +1,4 @@
-package com.example.agadimaganda.findyourownbarber;
+package com.example.agadimaganda.findyourownbarber.Object;
 
 import java.util.ArrayList;
 import java.util.List;

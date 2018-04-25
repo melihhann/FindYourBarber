@@ -1,4 +1,4 @@
-package com.example.agadimaganda.findyourownbarber;
+package com.example.agadimaganda.findyourownbarber.Activity;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -9,9 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.agadimaganda.findyourownbarber.R;
 import com.firebase.client.Firebase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

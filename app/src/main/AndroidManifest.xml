@@ -40,8 +40,8 @@
             android:value="AIzaSyDpmA1CnLvYPoF5hMz8PhF4dGXZn5wSZBc" />
 
 
-        <activity android:name=".LoginActivity"
-            android:parentActivityName=".MapsActivity">
+        <activity android:name=".Activity.LoginActivity"
+            android:parentActivityName=".Activity.MapsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -50,21 +50,21 @@
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.agadimaganda.findyourownbarber.MapsActivity" />
+                android:value="com.example.agadimaganda.findyourownbarber.Activity.MapsActivity" />
         </activity>
-        <activity android:name=".SignUpActivity"></activity>
+        <activity android:name=".Activity.SignUpActivity"></activity>
         <activity
-            android:name=".MapsActivity"></activity> <!-- android:label="@string/title_activity_maps" -->
+            android:name=".Activity.MapsActivity"></activity> <!-- android:label="@string/title_activity_maps" -->
         <activity
-            android:name=".ProfileActivity"
+            android:name=".Activity.ProfileActivity"
             android:label="@string/title_activity_profile"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".Activity.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".AddBarberActivity" />
-        <activity android:name=".BarberViewActivity" />
+        <activity android:name=".Activity.AddBarberActivity" />
+        <activity android:name=".Activity.BarberViewActivity" />
     </application>
 
 </manifest>

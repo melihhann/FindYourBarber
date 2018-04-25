@@ -1,4 +1,4 @@
-package com.example.agadimaganda.findyourownbarber;
+package com.example.agadimaganda.findyourownbarber.Object;
 
 import java.util.List;
 
@@ -11,15 +11,17 @@ public class Comment {
     private String comment;
     private List<Like> likes;
     private String dateCreated;
+    private String barberName;
 
     public  Comment(){
 
     }
 
-    public Comment(String comment, String userId, List<Like> likes, String dateCreated) {
+    public Comment(String comment, String userId, List<Like> likes, String dateCreated, String barberName) {
         this.comment = comment;
         this.likes = likes;
         this.dateCreated = dateCreated;
+        this.barberName = barberName;
     }
 
     public String getComment() {
@@ -45,4 +47,13 @@ public class Comment {
     public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
     }
+
+    public String getBarberName(){
+        return barberName;
+    }
+
+    public void setBarberName(String barberName){
+        this.barberName = barberName;
+    }
+
 }
