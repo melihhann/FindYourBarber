@@ -13,7 +13,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="104dp"></ListView>
+        android:layout_marginTop="104dp"
+        android:layout_marginBottom="55dp"></ListView>
 
 
 </RelativeLayout>
