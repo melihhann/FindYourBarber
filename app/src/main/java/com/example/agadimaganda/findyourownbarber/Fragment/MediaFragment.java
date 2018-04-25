@@ -21,10 +21,12 @@ import com.example.agadimaganda.findyourownbarber.Object.Upload;
 import com.example.agadimaganda.findyourownbarber.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -118,36 +120,51 @@ public class MediaFragment extends Fragment {
 
         uploadList = new ArrayList<>();
 
-        final DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("IMAGES");
-
-        childReferance.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("IMAGES").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                   // Upload upload = snapshot.getValue(Upload.class);
-                    String key = snapshot.getKey();
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Query query = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("IMAGES");
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        uploadList.clear();
+                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
 
-                    DatabaseReference childChild = childReferance.child(key);
-
-                    childChild.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for(DataSnapshot snapshot1 : dataSnapshot.getChildren()){
-                                String imageUrl = String.valueOf(snapshot1.getValue());
+                            for(DataSnapshot snapshotChild : snapshot.getChildren()){
+                                String imageUrl = String.valueOf(snapshotChild.getValue());
                                 final Upload upload = new Upload();
                                 upload.setImageUrl(imageUrl);
                                 uploadList.add(upload);
                             }
-                            imageAdapter = new ImageAdapter(getActivity(), uploadList);
-                            recyclerView.setAdapter(imageAdapter);
-                        }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                            if(getActivity() != null){
+                                imageAdapter = new ImageAdapter(getActivity(), uploadList);
+                                recyclerView.setAdapter(imageAdapter);
+                            }
 
                         }
-                    });
-                }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
@@ -155,6 +172,8 @@ public class MediaFragment extends Fragment {
 
             }
         });
+
+
 
 
         return view;
