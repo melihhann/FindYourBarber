@@ -1,4 +1,4 @@
-package com.example.agadimaganda.findyourownbarber;
+package com.example.agadimaganda.findyourownbarber.Adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.agadimaganda.findyourownbarber.Object.Comment;
+import com.example.agadimaganda.findyourownbarber.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -73,7 +75,7 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         //set the timestamp difference
         String timestampDifference = getTimestampDifference(getItem(position));
         if(!timestampDifference.equals("0")){
-            viewHolder.timestamp.setText(timestampDifference + " g");
+            viewHolder.timestamp.setText(timestampDifference + "g");
         }else{
             viewHolder.timestamp.setText("bugün");
         }

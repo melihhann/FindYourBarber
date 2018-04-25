@@ -1,21 +1,18 @@
-package com.example.agadimaganda.findyourownbarber;
+package com.example.agadimaganda.findyourownbarber.Activity;
 
 import android.content.Intent;
 import android.os.Build;
-import android.provider.ContactsContract;
-import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Toolbar;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.example.agadimaganda.findyourownbarber.Adapter.SectionsPageAdapter;
+import com.example.agadimaganda.findyourownbarber.Fragment.CommentsFragment;
+import com.example.agadimaganda.findyourownbarber.Fragment.DetailsFragment;
+import com.example.agadimaganda.findyourownbarber.Fragment.MediaFragment;
+import com.example.agadimaganda.findyourownbarber.Object.Barber;
+import com.example.agadimaganda.findyourownbarber.R;
 
 public class BarberViewActivity extends AppCompatActivity {
 

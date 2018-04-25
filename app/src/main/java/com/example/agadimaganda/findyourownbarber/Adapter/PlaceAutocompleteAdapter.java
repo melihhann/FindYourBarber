@@ -1,4 +1,4 @@
-package com.example.agadimaganda.findyourownbarber;
+package com.example.agadimaganda.findyourownbarber.Adapter;
 
 /*
  * Copyright (C) 2015 Google Inc. All Rights Reserved.

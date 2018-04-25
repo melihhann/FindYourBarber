@@ -1,4 +1,4 @@
-package com.example.agadimaganda.findyourownbarber;
+package com.example.agadimaganda.findyourownbarber.Method;
 
 import android.os.Build;
 import android.os.Bundle;

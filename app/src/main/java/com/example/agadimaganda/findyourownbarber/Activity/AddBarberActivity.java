@@ -1,22 +1,21 @@
-package com.example.agadimaganda.findyourownbarber;
+package com.example.agadimaganda.findyourownbarber.Activity;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
+import com.example.agadimaganda.findyourownbarber.Adapter.PlaceAutocompleteAdapter;
+import com.example.agadimaganda.findyourownbarber.Object.Barber;
+import com.example.agadimaganda.findyourownbarber.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.GoogleMap;
