@@ -9,6 +9,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +18,11 @@ import com.example.agadimaganda.findyourownbarber.Adapter.PlaceAutocompleteAdapt
 import com.example.agadimaganda.findyourownbarber.Object.Barber;
 import com.example.agadimaganda.findyourownbarber.R;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.AutocompletePrediction;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -60,6 +66,7 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
     //private coolMethods coolMethods = new coolMethods();
 
     //Variables
+    private boolean selectionMade = false;
     private int currentId;
     private Boolean flag = false;
     private BitmapDescriptorFactory bitmapDescriptorFactory;
@@ -68,6 +75,44 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
     private GoogleApiClient mGoogleApiClient;
     private LatLngBounds Lat_Long_Bounds = new LatLngBounds(new LatLng(36,24),new LatLng(42,25));
     private AutoCompleteTextView AutocompleteTextView;
+
+    private AdapterView.OnItemClickListener AutocompleteClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            final AutocompletePrediction item = mPlaceAutocompleteAdapter.getItem(position);
+            if (item != null) {
+                final String placeId = item.getPlaceId();
+                final CharSequence primaryText = item.getPrimaryText(null);
+                PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                        .getPlaceById(mGoogleApiClient, placeId);
+                placeResult.setResultCallback(UpdatePlaceDetailsCallback);
+            }
+        }
+    };
+    private ResultCallback<PlaceBuffer> UpdatePlaceDetailsCallback = new ResultCallback<PlaceBuffer>() {
+        @Override
+        public void onResult(@NonNull PlaceBuffer places) {
+            try{
+                if(places.getStatus().isSuccess() && places.getCount() > 0 && !selectionMade){
+                    final Place berberLoc = places.get(0);
+                    selectionMade = true;
+                    java.util.List<Address> berberAddress = geocoder.getFromLocation(berberLoc.getLatLng().latitude, berberLoc.getLatLng().longitude, 1);
+                    if(berberAddress != null){
+                        if(berberAddress.get(0).getAdminArea() != null){
+                            newBarber.setCity(berberAddress.get(0).getAdminArea());
+                        }
+                    }
+                    newBarber.setLatitude(berberLoc.getLatLng().latitude);
+                    newBarber.setLongitude(berberLoc.getLatLng().longitude);
+                }
+                places.release();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+    };
 
 
 
@@ -87,7 +132,9 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
         mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(this,mGoogleApiClient,Lat_Long_Bounds,null);
         AutocompleteTextView = (AutoCompleteTextView) findViewById(R.id.autocomplete_textView);
         AutocompleteTextView.setAdapter(mPlaceAutocompleteAdapter);
+        AutocompleteTextView.setOnItemClickListener(AutocompleteClickListener);
         //AutoComplete Stuff, doldur bosalt in text-field-Vra
+
 
 
 
@@ -145,7 +192,9 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
                     childRef.child("CITY").setValue(newBarber.getCity());
 
 
-                    marker.remove();
+                    if(!selectionMade){
+                        marker.remove();
+                    }
                     barberNameEditText.setText(""); 
                 }
 
@@ -172,25 +221,29 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
                     isMarkerAdded = false;
                 }
 
-                LatLng newBarberMarker = new LatLng(latLng.latitude, latLng.longitude);
-                 marker = map.addMarker(new MarkerOptions()
-                        .position(newBarberMarker).icon(bitmapDescriptorFactory.fromResource(R.drawable.makasufakbuyukufak)));
+                if(!selectionMade){
+                    LatLng newBarberMarker = new LatLng(latLng.latitude, latLng.longitude);
+                    marker = map.addMarker(new MarkerOptions()
+                            .position(newBarberMarker).icon(bitmapDescriptorFactory.fromResource(R.drawable.makasufakbuyukufak)));
 
-                isMarkerAdded = true;
-                newBarber.setLatitude(latLng.latitude);
-                newBarber.setLongitude(latLng.longitude);
+                    isMarkerAdded = true;
+                    newBarber.setLatitude(latLng.latitude);
+                    newBarber.setLongitude(latLng.longitude);
 
-                try{
-                    address = geocoder.getFromLocation(newBarber.getLatitude(), newBarber.getLongitude(), 1);
-                }catch (IOException e){
-                    e.printStackTrace();
-                }
+                    try{
+                        address = geocoder.getFromLocation(newBarber.getLatitude(), newBarber.getLongitude(), 1);
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
 
-                if(address != null){
-                    if(address.get(0).getAdminArea() != null){
-                        newBarber.setCity(address.get(0).getAdminArea());
+                    if(address != null){
+                        if(address.get(0).getAdminArea() != null){
+                            newBarber.setCity(address.get(0).getAdminArea());
+                        }
                     }
                 }
+
+
             }
         });
 
