@@ -11,9 +11,10 @@
         android:id="@+id/barberName_editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/autocomplete_textView"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="49dp"
+        android:layout_alignStart="@+id/autocomplete_textView"
+        android:layout_marginTop="21dp"
         android:ems="10"
         android:gravity="center_vertical"
         android:hint="Barber Name"
@@ -31,17 +32,15 @@
         android:hint="Adres, cadde, sokak..."
         android:layout_marginTop="5dp"
         android:ems="10"/>
+
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="300dp"
         android:layout_height="200dp"
-        android:layout_alignEnd="@+id/addBarber"
         android:layout_alignLeft="@+id/addBarber"
-        android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/addBarber"
         android:layout_alignStart="@+id/addBarber"
-        android:layout_below="@+id/barberName_editText"
-        android:layout_marginTop="175dp"
+        android:layout_below="@+id/addBarber"
+        android:layout_marginTop="51dp"
         android:visibility="visible" />
 
     <Button
@@ -59,9 +58,9 @@
         android:id="@+id/addBarber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/barberName_editText"
+        android:layout_below="@+id/autocomplete_textView"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="14dp"
         android:text="Berberi eklemek istediğiniz yere uzun süreli basınız." />
 
 </RelativeLayout>

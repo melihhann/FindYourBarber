@@ -66,9 +66,6 @@ public class UserDetailsFragment extends Fragment {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         final DatabaseReference childRef = databaseReference.child("USERS");
 
-
-        // TODO: 11.04.2018 BUNA GIRMIYOR.
-
         if(email != null ){
             childRef.addValueEventListener(new ValueEventListener() {
                 @Override

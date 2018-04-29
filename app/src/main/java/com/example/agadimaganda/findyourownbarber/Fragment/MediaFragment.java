@@ -207,7 +207,6 @@ public class MediaFragment extends Fragment {
                     final DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ", "")).child("IMAGES").child(userId);
 
                     childReferance.push().setValue(upload.getImageUrl());
-                    // TODO: 19.04.2018 Son image kesik olarak çıkıyor.
 
                     Toast.makeText(getActivity(), "Fotoğraf Yükleme Tamamlandı.", Toast.LENGTH_LONG).show();
                     progressDialog.dismiss();

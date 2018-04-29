@@ -9,7 +9,7 @@ import java.util.List;
 public class Comment {
 
     private String comment;
-    private List<Like> likes;
+    private Long likes;
     private String dateCreated;
     private String barberName;
 
@@ -17,7 +17,7 @@ public class Comment {
 
     }
 
-    public Comment(String comment, String userId, List<Like> likes, String dateCreated, String barberName) {
+    public Comment(String comment, Long likes, String dateCreated, String barberName) {
         this.comment = comment;
         this.likes = likes;
         this.dateCreated = dateCreated;
@@ -32,11 +32,11 @@ public class Comment {
         this.comment = comment;
     }
 
-    public List<Like> getLikes() {
+    public Long getLikes() {
         return likes;
     }
 
-    public void setLikes(List<Like> likes) {
+    public void setLikes(Long likes) {
         this.likes = likes;
     }
 

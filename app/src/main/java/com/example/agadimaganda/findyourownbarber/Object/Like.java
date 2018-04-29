@@ -2,6 +2,8 @@ package com.example.agadimaganda.findyourownbarber.Object;
 
 import com.example.agadimaganda.findyourownbarber.Object.Comment;
 
+import java.util.ArrayList;
+
 /**
  * Created by Aga diMaganda on 21.04.2018.
  */
@@ -9,32 +11,33 @@ import com.example.agadimaganda.findyourownbarber.Object.Comment;
 public class Like {
 
     private String userId;
-    private Comment comment;
+    private Long commentLike;
 
 
-    public Like(String userId, Comment comment) {
+    public Like(String userIdList, Long commentLike) {
         this.userId = userId;
-        this.comment = comment;
+        this.commentLike = commentLike;
     }
 
     public Like() {
     }
 
-    public String getUserId() {
+    public String getUserId(){
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(String userId){
         this.userId = userId;
     }
 
-    public Comment getComment(){
-        return comment;
+    public Long getCommentLike(){
+        return commentLike;
     }
 
-    public void setComment(Comment comment){
-        this.comment = comment;
+    public void setCommentLike(Long commentLike){
+        this.commentLike = commentLike;
     }
+
 
     @Override
     public String toString() {

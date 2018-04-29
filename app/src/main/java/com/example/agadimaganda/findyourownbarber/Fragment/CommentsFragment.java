@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.agadimaganda.findyourownbarber.Activity.BarberViewActivity;
 import com.example.agadimaganda.findyourownbarber.Adapter.CommentListAdapter;
 import com.example.agadimaganda.findyourownbarber.Object.Barber;
 import com.example.agadimaganda.findyourownbarber.Object.Comment;
@@ -80,7 +82,16 @@ public class CommentsFragment extends Fragment {
         }
 
 
+        Intent intent2 = new Intent(getActivity(), CommentListAdapter.class);
+        Bundle bundle2 = new Bundle();
+        bundle.putString("barberName", barber.getBarberName());
+        bundle.putDouble("latitude", barber.getLatitude());
+        bundle.putDouble("longitude", barber.getLongitude());
+        bundle.putString("city", barber.getCity());
+        intent.putExtras(bundle);
 
+
+        //Yorum yapma Tuşu
         postComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,7 +106,6 @@ public class CommentsFragment extends Fragment {
         });
 
         userId = auth.getCurrentUser().getUid();
-        // TODO: 22.04.2018 Yorum yapıldığı zaman sayfa otomatik olarak yenileniyor ve yeni yorum gözüküyor. Başka kullanıcı yorum atarken diğer kullanıcının sayfası yenileniyor mu ona bakmak lazım.
         databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("COMMENTS").child(userId).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -106,15 +116,13 @@ public class CommentsFragment extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         commentArrayList.clear();
                         for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                            //commentArrayList.clear();
-                            //String userId = snapshot.getKey();
 
                             for(DataSnapshot snapshotChild : snapshot.getChildren()){
                                 Comment comment = new Comment();
                                 comment.setComment(snapshotChild.getValue(Comment.class).getComment());
                                 comment.setDateCreated(snapshotChild.getValue(Comment.class).getDateCreated());
                                 comment.setBarberName(barber.getBarberName());
-                                //comment.setLikes();
+                                comment.setLikes((Long) snapshotChild.child("LIKE").child("commentLike").getValue());
                                 commentArrayList.add(comment);
                             }
 
@@ -169,14 +177,19 @@ public class CommentsFragment extends Fragment {
         DatabaseReference childRef = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ", ""));
         DatabaseReference userChildRef = databaseReference.child("USERS").child(userId);
 
-        String commentId  = childRef.child("COMMENTS").child(userId).push().getKey();//userId null geliyor.
+        String commentId  = childRef.child("COMMENTS").child(userId).push().getKey();
         Comment comment = new Comment();
         comment.setComment(newComment);
         comment.setDateCreated(coolMethods.getTimestamp());
         comment.setBarberName(barber.getBarberName());
 
+        //Berberin altındaki yorum
         childRef.child("COMMENTS").child(userId).child(commentId).setValue(comment);
+        childRef.child("COMMENTS").child(userId).child(commentId).child("LIKE").child("commentLike").setValue(0);
+
+        //Kullanıcı altındaki yorum
         userChildRef.child("COMMENTS").child(commentId).setValue(comment);
+        userChildRef.child("COMMENTS").child(commentId).child("LIKE").child("commentLike").setValue(0);
 
 
 

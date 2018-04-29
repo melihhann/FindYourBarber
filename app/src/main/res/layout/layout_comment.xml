@@ -14,7 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="60dp"
-            android:layout_marginBottom="30dp">
+            android:layout_marginBottom="30dp"
+            android:id="@+id/relativeLayout">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -40,7 +41,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="10 beğeni"
+                android:text="0 Beğeni"
                 android:layout_marginLeft="15dp"
                 android:textColor="@color/colorBlack"
                 android:textSize="13sp"
@@ -63,16 +64,29 @@
                 android:layout_below="@id/comment"
                 android:layout_toRightOf="@id/comment_likes"/>
 
+            <ImageView
+                android:id="@+id/comment_like"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignTop="@+id/comment_reply"
+                android:layout_marginLeft="39dp"
+                android:layout_marginStart="39dp"
+                android:layout_toEndOf="@+id/comment_reply"
+                android:layout_toRightOf="@+id/comment_reply"
+                android:src="@drawable/makasufakbuyukufak" />
+
         </RelativeLayout>
 
         <ImageView
+            android:id="@+id/comment_dislike"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:id="@+id/comment_like"
+            android:layout_alignBottom="@+id/relativeLayout"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/makasufakbuyukufak"
-            android:layout_centerVertical="true" />
+            android:layout_marginEnd="34dp"
+            android:layout_marginRight="34dp"
+            android:src="@drawable/places_ic_clear" />
 
     </RelativeLayout>
 
