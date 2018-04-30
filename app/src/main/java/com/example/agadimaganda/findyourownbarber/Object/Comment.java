@@ -12,16 +12,20 @@ public class Comment {
     private Long likes;
     private String dateCreated;
     private String barberName;
+    private String userId;
+    private String commentId;
 
     public  Comment(){
 
     }
 
-    public Comment(String comment, Long likes, String dateCreated, String barberName) {
+    public Comment(String comment, Long likes, String dateCreated, String barberName, String userId, String commentId) {
         this.comment = comment;
         this.likes = likes;
         this.dateCreated = dateCreated;
         this.barberName = barberName;
+        this.userId = userId;
+        this.commentId = commentId;
     }
 
     public String getComment() {
@@ -54,6 +58,22 @@ public class Comment {
 
     public void setBarberName(String barberName){
         this.barberName = barberName;
+    }
+
+    public String getUserId(){
+        return  userId;
+    }
+
+    public void setUserId(String userId){
+        this.userId = userId;
+    }
+
+    public String getCommentId(){
+        return commentId;
+    }
+
+    public void setCommentId(String commentId){
+        this.commentId = commentId;
     }
 
 }

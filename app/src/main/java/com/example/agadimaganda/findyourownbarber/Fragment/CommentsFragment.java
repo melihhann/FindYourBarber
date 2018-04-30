@@ -123,6 +123,7 @@ public class CommentsFragment extends Fragment {
                                 comment.setDateCreated(snapshotChild.getValue(Comment.class).getDateCreated());
                                 comment.setBarberName(barber.getBarberName());
                                 comment.setLikes((Long) snapshotChild.child("LIKE").child("commentLike").getValue());
+                                comment.setUserId(snapshotChild.getValue(Comment.class).getUserId());
                                 commentArrayList.add(comment);
                             }
 
@@ -182,15 +183,14 @@ public class CommentsFragment extends Fragment {
         comment.setComment(newComment);
         comment.setDateCreated(coolMethods.getTimestamp());
         comment.setBarberName(barber.getBarberName());
-
+        comment.setUserId(userId);
+ 
         //Berberin altındaki yorum
         childRef.child("COMMENTS").child(userId).child(commentId).setValue(comment);
         childRef.child("COMMENTS").child(userId).child(commentId).child("LIKE").child("commentLike").setValue(0);
 
         //Kullanıcı altındaki yorum
         userChildRef.child("COMMENTS").child(commentId).setValue(comment);
-        userChildRef.child("COMMENTS").child(commentId).child("LIKE").child("commentLike").setValue(0);
-
 
 
     }

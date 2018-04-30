@@ -44,6 +44,8 @@ public class UserCommentsFragment extends Fragment {
     //Variables
     private ArrayList<Comment> userCommentArrayList;
     private String userId;
+    private int i = 0;
+    private Boolean flag = false;
 
     //Database Connection
     private FirebaseAuth auth;
@@ -71,25 +73,29 @@ public class UserCommentsFragment extends Fragment {
 
         userId = auth.getCurrentUser().getUid();
 
+
         Query query = databaseReference.child("USERS").child(userId).child("COMMENTS");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+
                     Comment comment = new Comment();
                     comment.setComment(snapshot.getValue(Comment.class).getComment());
                     comment.setDateCreated(snapshot.getValue(Comment.class).getDateCreated());
                     comment.setBarberName(snapshot.getValue(Comment.class).getBarberName());
-                    //comment.setLikes();
-                    userCommentArrayList.add(comment);
+                    comment.setCommentId(snapshot.getKey());
 
-                    if(getActivity() != null){
-                        UserCommentListAdapter adapter = new UserCommentListAdapter(getActivity(), R.layout.layout_user_comment, userCommentArrayList);
-                        userCommentListView.setAdapter(adapter);
-                    }
+                    final DatabaseReference refForLike = databaseReference.child("BARBERS").child(comment.getBarberName().toUpperCase().replace(" ", ""))
+                            .child("COMMENTS").child(auth.getCurrentUser().getUid()).child(comment.getCommentId()).child("LIKE");
+
+                    getCommentLikeCount(refForLike, comment);
+
                 }
+
             }
+
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -105,4 +111,29 @@ public class UserCommentsFragment extends Fragment {
         Intent intent = getActivity().getIntent();
     }
 
+
+    public void getCommentLikeCount(DatabaseReference reference, final Comment comment){
+        //Yorumun aldığı beğenileri çekme
+
+            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    comment.setLikes((Long) dataSnapshot.child("commentLike").getValue());
+                    userCommentArrayList.add(comment);
+
+                    if(getActivity() != null){
+                        UserCommentListAdapter adapter = new UserCommentListAdapter(getActivity(), R.layout.layout_user_comment, userCommentArrayList);
+                        userCommentListView.setAdapter(adapter);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+    }
+
 }
+
+

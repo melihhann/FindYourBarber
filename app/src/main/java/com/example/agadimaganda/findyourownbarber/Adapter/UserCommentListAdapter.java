@@ -70,6 +70,11 @@ public class UserCommentListAdapter extends ArrayAdapter<Comment> {
         //set the comment
         viewHolder.comment.setText(getItem(position).getComment());
 
+        //set the likes
+        viewHolder.likes.setText(getItem(position).getLikes().toString() + " Beğeni");
+
+
+
         //set the timestamp difference
         String timestampDifference = getTimestampDifference(getItem(position));
         if(!timestampDifference.equals("0")){
