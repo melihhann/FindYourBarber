@@ -44,8 +44,6 @@ public class UserCommentsFragment extends Fragment {
     //Variables
     private ArrayList<Comment> userCommentArrayList;
     private String userId;
-    private int i = 0;
-    private Boolean flag = false;
 
     //Database Connection
     private FirebaseAuth auth;

@@ -1,6 +1,8 @@
 package com.example.agadimaganda.findyourownbarber.Adapter;
 
 import android.app.Activity;
+import android.app.LauncherActivity;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.agadimaganda.findyourownbarber.Object.Barber;
@@ -31,8 +34,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -50,6 +56,8 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
     private LayoutInflater inflater;
     private int layoutResource;
     private Context mContext;
+
+
 
     //Database Connection
     private FirebaseAuth auth;
@@ -79,6 +87,7 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         final ViewHolder viewHolder;
+        Comment item = getItem(position);
 
         if(convertView == null){
             convertView = inflater.inflate(layoutResource, parent, false);
@@ -91,24 +100,55 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
             viewHolder.like = (ImageView) convertView.findViewById(R.id.comment_like);
             viewHolder.dislike = (ImageView) convertView.findViewById(R.id.comment_dislike);
 
+            viewHolder.like.setTag(position);
+            viewHolder.dislike.setTag(position);
+
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
+
+
         //set the comment
-        viewHolder.comment.setText(getItem(position).getComment());
+        if(viewHolder.comment != null){
+            viewHolder.comment.setText(item.getComment());
+        }
 
         //set the likes
-        viewHolder.likes.setText(getItem(position).getLikes().toString() + " Beğeni");
+        if(viewHolder.likes != null){
+            viewHolder.likes.setText(item.getLikes().toString() + " Beğeni");
+        }
+
+        //set like dislike imageView
+
+        if(item.getLikePosNeg() != null){
+
+            if(item.getLikePosNeg().toString().equalsIgnoreCase("NEUTRAL")){
+                viewHolder.like.setBackgroundColor(Color.WHITE);
+                viewHolder.dislike.setBackgroundColor(Color.WHITE);
+            }else if(item.getLikePosNeg().toString().equalsIgnoreCase("POSITIVE")){
+                viewHolder.like.setBackgroundColor(Color.GREEN);
+                viewHolder.dislike.setBackgroundColor(Color.WHITE);
+            }else if(item.getLikePosNeg().toString().equalsIgnoreCase("NEGATIVE")){
+                viewHolder.like.setBackgroundColor(Color.WHITE);
+                viewHolder.dislike.setBackgroundColor(Color.RED);
+            }
+        }
 
         //set the timestamp difference
-        String timestampDifference = getTimestampDifference(getItem(position));
-        if(!timestampDifference.equals("0")){
-            viewHolder.timestamp.setText(timestampDifference + "g");
-        }else{
-            viewHolder.timestamp.setText("bugün");
+        if(viewHolder.timestamp != null)
+        {
+            String timestampDifference = getTimestampDifference(getItem(position));
+            if(!timestampDifference.equals("0")){
+                viewHolder.timestamp.setText(timestampDifference + "g");
+            }else{
+                viewHolder.timestamp.setText("bugün");
+            }
         }
+
+
+
 
         //Database Connection
         auth = FirebaseAuth.getInstance();
@@ -157,10 +197,6 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
                                             final DatabaseReference reference = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ",""))
                                                     .child("COMMENTS").child(userId).child(commentId).child("LIKE");
 
-                                           // final DatabaseReference referenceUser = databaseReference.child("USERS").child(auth.getCurrentUser().getUid()).child("COMMENTS")
-                                             //       .child(commentId).child("LIKE");
-
-
                                             reference.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -172,7 +208,6 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
                                                     if(posNegLike == null || posNegLike.equalsIgnoreCase("NEGATIVE") || posNegLike.equalsIgnoreCase("NEUTRAL")){
 
                                                         reference.child("USERS").child(userIdWhoLikes).setValue("POSITIVE");
-                                                       // referenceUser.child("USERS").child(comment.getUserId()).setValue("POSITIVE");
 
                                                         if(posNegLike == null || posNegLike.equalsIgnoreCase("NEUTRAL")){
                                                             currentLikeValue = currentLikeValue + 1;
@@ -181,23 +216,19 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
                                                         }
 
                                                         DatabaseReference likeRef = reference.child("commentLike");
-                                                        //DatabaseReference likeRefUser = referenceUser.child("commentLike");
                                                         viewHolder.likes.setText(currentLikeValue + " Beğeni");
                                                         viewHolder.dislike.setBackgroundColor(Color.WHITE);
                                                         viewHolder.like.setBackgroundColor(Color.GREEN);
                                                         likeRef.setValue(currentLikeValue);
-                                                        //likeRefUser.setValue(currentLikeValue);
+
                                                     }else{
 
                                                         reference.child("USERS").child(userIdWhoLikes).setValue("NEUTRAL");
-                                                        //referenceUser.child("USERS").child(comment.getUserId()).setValue("NEUTRAL");
                                                         currentLikeValue = currentLikeValue - 1;
                                                         DatabaseReference likeRef = reference.child("commentLike");
-                                                        //DatabaseReference likeRefUser = referenceUser.child("commentLike");
                                                         viewHolder.likes.setText(currentLikeValue + " Beğeni");
                                                         viewHolder.like.setBackgroundColor(Color.WHITE);
                                                         likeRef.setValue(currentLikeValue);
-                                                        //likeRefUser.setValue(currentLikeValue);
                                                     }
                                                 }
 
@@ -250,9 +281,6 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
                                         final DatabaseReference reference = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ",""))
                                                 .child("COMMENTS").child(userId).child(commentId).child("LIKE");
 
-                                        //final DatabaseReference referenceUser = databaseReference.child("USERS").child(comment.getUserId()).child("COMMENTS")
-                                                //.child(commentId).child("LIKE");
-
                                         reference.addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -264,7 +292,6 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
                                                 if(posNegLike == null || posNegLike.equalsIgnoreCase("POSITIVE") || posNegLike.equalsIgnoreCase("NEUTRAL")){
 
                                                     reference.child("USERS").child(userIdWhoLikes).setValue("NEGATIVE");
-                                                    //referenceUser.child("USERS").child(comment.getUserId()).setValue("NEGATIVE");
 
                                                     if(posNegLike == null || posNegLike.equalsIgnoreCase("NEUTRAL")){
                                                         currentLikeValue = currentLikeValue - 1;
@@ -273,23 +300,19 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
                                                     }
 
                                                     DatabaseReference likeRef = reference.child("commentLike");
-                                                    //DatabaseReference likeRefUser = referenceUser.child("commentLike");
                                                     viewHolder.likes.setText(currentLikeValue + " Beğeni");
                                                     viewHolder.dislike.setBackgroundColor(Color.RED);
                                                     viewHolder.like.setBackgroundColor(Color.WHITE);
                                                     likeRef.setValue(currentLikeValue);
-                                                    //likeRefUser.setValue(currentLikeValue);
+
                                                 }else{
 
                                                     reference.child("USERS").child(userIdWhoLikes).setValue("NEUTRAL");
-                                                    //referenceUser.child("USERS").child(comment.getUserId()).setValue("NEUTRAL");
                                                     currentLikeValue = currentLikeValue + 1;
                                                     DatabaseReference likeRef = reference.child("commentLike");
-                                                    //DatabaseReference likeRefUser = referenceUser.child("commentLike");
                                                     viewHolder.likes.setText(currentLikeValue + " Beğeni");
                                                     viewHolder.dislike.setBackgroundColor(Color.WHITE);
                                                     likeRef.setValue(currentLikeValue);
-                                                    //likeRefUser.setValue(currentLikeValue);
                                                 }
                                             }
 

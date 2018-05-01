@@ -1,5 +1,6 @@
 package com.example.agadimaganda.findyourownbarber.Fragment;
 
+import android.app.LauncherActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -32,6 +35,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class CommentsFragment extends Fragment {
@@ -66,6 +70,7 @@ public class CommentsFragment extends Fragment {
         comment = (EditText) view.findViewById(R.id.comment);
         listView = (ListView) view.findViewById(R.id.listView);
         commentArrayList = new ArrayList<>();
+
 
         auth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -124,12 +129,13 @@ public class CommentsFragment extends Fragment {
                                 comment.setBarberName(barber.getBarberName());
                                 comment.setLikes((Long) snapshotChild.child("LIKE").child("commentLike").getValue());
                                 comment.setUserId(snapshotChild.getValue(Comment.class).getUserId());
+                                comment.setLikePosNeg((String) snapshotChild.child("LIKE").child("USERS").child(auth.getCurrentUser().getUid()).getValue());
                                 commentArrayList.add(comment);
-                            }
 
-                            if(getActivity() != null){
-                                CommentListAdapter adapter = new CommentListAdapter(getActivity(), R.layout.layout_comment, commentArrayList);
-                                listView.setAdapter(adapter);
+                                if(getActivity() != null){
+                                    CommentListAdapter adapter = new CommentListAdapter(getActivity(), R.layout.layout_comment, commentArrayList);
+                                    listView.setAdapter(adapter);
+                                }
                             }
                         }
                     }
@@ -162,6 +168,7 @@ public class CommentsFragment extends Fragment {
             }
         });
 
+
         return view;
     }
 
@@ -184,7 +191,7 @@ public class CommentsFragment extends Fragment {
         comment.setDateCreated(coolMethods.getTimestamp());
         comment.setBarberName(barber.getBarberName());
         comment.setUserId(userId);
- 
+
         //Berberin altındaki yorum
         childRef.child("COMMENTS").child(userId).child(commentId).setValue(comment);
         childRef.child("COMMENTS").child(userId).child(commentId).child("LIKE").child("commentLike").setValue(0);

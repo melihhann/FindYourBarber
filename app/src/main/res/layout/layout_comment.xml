@@ -11,82 +11,85 @@
         android:layout_marginTop="15sp">
 
         <RelativeLayout
+            android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="60dp"
-            android:layout_marginBottom="30dp"
-            android:id="@+id/relativeLayout">
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="30dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="En iyi berber Kadir Abi'dir."
-                android:layout_marginLeft="15dp"
-                android:textColor="@color/colorBlack"
                 android:id="@+id/comment"
-                android:textSize="15sp"/>
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="7 yıl önce"
                 android:layout_marginLeft="15dp"
+                android:text="En iyi berber Kadir Abi'dir."
                 android:textColor="@color/colorBlack"
-                android:textSize="13sp"
-                android:textStyle="italic"
+                android:textSize="15sp" />
+
+            <TextView
                 android:id="@+id/comment_time_posted"
-                android:layout_marginTop="15dp"
-                android:layout_below="@id/comment"/>
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0 Beğeni"
+                android:layout_below="@id/comment"
                 android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:text="7 yıl önce"
                 android:textColor="@color/colorBlack"
                 android:textSize="13sp"
-                android:textStyle="italic"
+                android:textStyle="italic" />
+
+            <TextView
                 android:id="@+id/comment_likes"
-                android:layout_marginTop="15dp"
-                android:layout_below="@id/comment"
-                android:layout_toRightOf="@id/comment_time_posted"/>
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cevapla"
+                android:layout_below="@id/comment"
                 android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_toRightOf="@id/comment_time_posted"
+                android:text="0 Beğeni"
                 android:textColor="@color/colorBlack"
                 android:textSize="13sp"
-                android:textStyle="italic"
+                android:textStyle="italic" />
+
+            <TextView
                 android:id="@+id/comment_reply"
-                android:layout_marginTop="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/comment"
-                android:layout_toRightOf="@id/comment_likes"/>
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_toRightOf="@id/comment_likes"
+                android:text="Cevapla"
+                android:textColor="@color/colorBlack"
+                android:textSize="13sp"
+                android:textStyle="italic" />
 
             <ImageView
                 android:id="@+id/comment_like"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_alignTop="@+id/comment_reply"
-                android:layout_marginLeft="39dp"
-                android:layout_marginStart="39dp"
-                android:layout_toEndOf="@+id/comment_reply"
-                android:layout_toRightOf="@+id/comment_reply"
+                android:layout_marginEnd="34dp"
+                android:layout_marginRight="34dp"
+                android:layout_toRightOf="@id/comment_reply"
+                android:layout_toStartOf="@+id/comment_dislike"
                 android:src="@drawable/makasufakbuyukufak" />
 
+            <ImageView
+                android:id="@+id/comment_dislike"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/comment_like"
+                android:layout_marginEnd="45dp"
+                android:layout_marginRight="45dp"
+                android:layout_toLeftOf="@+id/comment_dislike"
+                android:src="@drawable/places_ic_clear" />
         </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/comment_dislike"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_alignBottom="@+id/relativeLayout"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginEnd="34dp"
-            android:layout_marginRight="34dp"
-            android:src="@drawable/places_ic_clear" />
+
 
     </RelativeLayout>
 
