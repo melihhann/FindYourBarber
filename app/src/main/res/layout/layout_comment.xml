@@ -52,41 +52,35 @@
                 android:textSize="13sp"
                 android:textStyle="italic" />
 
-            <TextView
-                android:id="@+id/comment_reply"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/comment"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="15dp"
-                android:layout_toRightOf="@id/comment_likes"
-                android:text="Cevapla"
-                android:textColor="@color/colorBlack"
-                android:textSize="13sp"
-                android:textStyle="italic" />
 
             <ImageView
                 android:id="@+id/comment_like"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_alignTop="@+id/comment_reply"
-                android:layout_marginEnd="34dp"
-                android:layout_marginRight="34dp"
-                android:layout_toRightOf="@id/comment_reply"
-                android:layout_toStartOf="@+id/comment_dislike"
-                android:src="@drawable/makasufakbuyukufak" />
+                android:layout_alignTop="@+id/comment_likes"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/ic_thumb_up_black_24dp" />
 
             <ImageView
                 android:id="@+id/comment_dislike"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
+                android:layout_marginLeft="50dp"
+                android:layout_alignTop="@+id/comment_like"
+                android:layout_toEndOf="@+id/comment_like"
+                android:layout_toRightOf="@+id/comment_like"
+                android:src="@mipmap/ic_thumb_down_black_24dp" />
+
+            <ImageView
+                android:id="@+id/comment_delete"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_above="@+id/comment_dislike"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignTop="@+id/comment_like"
-                android:layout_marginEnd="45dp"
-                android:layout_marginRight="45dp"
-                android:layout_toLeftOf="@+id/comment_dislike"
-                android:src="@drawable/places_ic_clear" />
+                android:layout_marginEnd="21dp"
+                android:layout_marginRight="21dp"
+                android:src="@mipmap/ic_cancel_black_24dp" />
         </RelativeLayout>
 
 

@@ -15,13 +15,12 @@ public class Comment {
     private String userId;
     private String commentId;
     private String likePosNeg;
-    private Boolean isClicked = false;
 
     public  Comment(){
 
     }
 
-    public Comment(String comment, Long likes, String dateCreated, String barberName, String userId, String commentId, String likePosNeg, Boolean isClicked) {
+    public Comment(String comment, Long likes, String dateCreated, String barberName, String userId, String commentId, String likePosNeg) {
         this.comment = comment;
         this.likes = likes;
         this.dateCreated = dateCreated;
@@ -29,7 +28,6 @@ public class Comment {
         this.userId = userId;
         this.commentId = commentId;
         this.likePosNeg = likePosNeg;
-        this.isClicked = isClicked;
     }
 
     public String getComment() {
@@ -88,12 +86,6 @@ public class Comment {
         this.likePosNeg = likePosNeg;
     }
 
-    public Boolean getIsClicked(){
-        return isClicked;
-    }
 
-    public void setIsClicked(Boolean isClicked){
-        this.isClicked = isClicked;
-    }
 
 }

@@ -130,6 +130,7 @@ public class CommentsFragment extends Fragment {
                                 comment.setLikes((Long) snapshotChild.child("LIKE").child("commentLike").getValue());
                                 comment.setUserId(snapshotChild.getValue(Comment.class).getUserId());
                                 comment.setLikePosNeg((String) snapshotChild.child("LIKE").child("USERS").child(auth.getCurrentUser().getUid()).getValue());
+                                comment.setCommentId(snapshotChild.getKey());
                                 commentArrayList.add(comment);
 
                                 if(getActivity() != null){
@@ -154,7 +155,38 @@ public class CommentsFragment extends Fragment {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+                //Yorumları sayfada gösterme
+                Query query = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("COMMENTS");
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        commentArrayList.clear();
+                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
 
+                            for(DataSnapshot snapshotChild : snapshot.getChildren()){
+                                Comment comment = new Comment();
+                                comment.setComment(snapshotChild.getValue(Comment.class).getComment());
+                                comment.setDateCreated(snapshotChild.getValue(Comment.class).getDateCreated());
+                                comment.setBarberName(barber.getBarberName());
+                                comment.setLikes((Long) snapshotChild.child("LIKE").child("commentLike").getValue());
+                                comment.setUserId(snapshotChild.getValue(Comment.class).getUserId());
+                                comment.setLikePosNeg((String) snapshotChild.child("LIKE").child("USERS").child(auth.getCurrentUser().getUid()).getValue());
+                                comment.setCommentId(snapshotChild.getKey());
+                                commentArrayList.add(comment);
+
+                                if(getActivity() != null){
+                                    CommentListAdapter adapter = new CommentListAdapter(getActivity(), R.layout.layout_comment, commentArrayList);
+                                    listView.setAdapter(adapter);
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             @Override
@@ -167,6 +199,8 @@ public class CommentsFragment extends Fragment {
 
             }
         });
+
+
 
 
         return view;

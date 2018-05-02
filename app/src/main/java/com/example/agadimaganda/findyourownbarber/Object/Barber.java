@@ -22,6 +22,7 @@ public class Barber {
     private List<Comment> commentList;
 
     public Barber(Object tag) {
+
     }
 
     public Barber(){

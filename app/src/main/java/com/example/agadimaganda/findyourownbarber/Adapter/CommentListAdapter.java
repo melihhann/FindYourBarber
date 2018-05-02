@@ -22,6 +22,7 @@ import com.example.agadimaganda.findyourownbarber.Object.Barber;
 import com.example.agadimaganda.findyourownbarber.Object.Comment;
 import com.example.agadimaganda.findyourownbarber.Object.Like;
 import com.example.agadimaganda.findyourownbarber.R;
+import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -76,18 +78,17 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
 
 
     private static class ViewHolder{
-        TextView comment, timestamp, reply, likes;
-        ImageView like, dislike;
+        TextView comment, timestamp, likes;
+        ImageView like, dislike, deleteComment;
 
     }
 
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         final ViewHolder viewHolder;
-        Comment item = getItem(position);
 
         if(convertView == null){
             convertView = inflater.inflate(layoutResource, parent, false);
@@ -95,42 +96,57 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
 
             viewHolder.comment = (TextView) convertView.findViewById(R.id.comment);
             viewHolder.timestamp = (TextView) convertView.findViewById(R.id.comment_time_posted);
-            viewHolder.reply = (TextView) convertView.findViewById(R.id.comment_reply);
             viewHolder.likes = (TextView) convertView.findViewById(R.id.comment_likes);
             viewHolder.like = (ImageView) convertView.findViewById(R.id.comment_like);
             viewHolder.dislike = (ImageView) convertView.findViewById(R.id.comment_dislike);
+            viewHolder.deleteComment = (ImageView) convertView.findViewById(R.id.comment_delete);
 
             viewHolder.like.setTag(position);
             viewHolder.dislike.setTag(position);
 
             convertView.setTag(viewHolder);
+
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
+        }
+
+
+        //Database Connection
+        auth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
+
+
+        //set the commentDelete ImageView
+        if(viewHolder.deleteComment != null){
+            if(!(getItem(position).getUserId().equalsIgnoreCase(auth.getCurrentUser().getUid()))){
+                viewHolder.deleteComment.setVisibility(View.INVISIBLE);
+            }
         }
 
 
 
         //set the comment
         if(viewHolder.comment != null){
-            viewHolder.comment.setText(item.getComment());
+            viewHolder.comment.setText(getItem(position).getComment());
         }
 
         //set the likes
         if(viewHolder.likes != null){
-            viewHolder.likes.setText(item.getLikes().toString() + " Beğeni");
+            viewHolder.likes.setText(getItem(position).getLikes().toString() + " Beğeni");
         }
 
         //set like dislike imageView
 
-        if(item.getLikePosNeg() != null){
+        if(getItem(position).getLikePosNeg() != null){
 
-            if(item.getLikePosNeg().toString().equalsIgnoreCase("NEUTRAL")){
+            if(getItem(position).getLikePosNeg().toString().equalsIgnoreCase("NEUTRAL")){
                 viewHolder.like.setBackgroundColor(Color.WHITE);
                 viewHolder.dislike.setBackgroundColor(Color.WHITE);
-            }else if(item.getLikePosNeg().toString().equalsIgnoreCase("POSITIVE")){
+            }else if(getItem(position).getLikePosNeg().toString().equalsIgnoreCase("POSITIVE")){
                 viewHolder.like.setBackgroundColor(Color.GREEN);
                 viewHolder.dislike.setBackgroundColor(Color.WHITE);
-            }else if(item.getLikePosNeg().toString().equalsIgnoreCase("NEGATIVE")){
+            }else if(getItem(position).getLikePosNeg().toString().equalsIgnoreCase("NEGATIVE")){
                 viewHolder.like.setBackgroundColor(Color.WHITE);
                 viewHolder.dislike.setBackgroundColor(Color.RED);
             }
@@ -148,14 +164,6 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         }
 
 
-
-
-        //Database Connection
-        auth = FirebaseAuth.getInstance();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-
-
         //CommentsFragment sayfasından berber bilgilerini alma
         Intent intent = ((Activity) mContext).getIntent();
         Bundle bundle = ((Activity) mContext).getIntent().getExtras();
@@ -166,7 +174,6 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
             barber.setLongitude(bundle.getDouble("longitude"));
             barber.setCity(bundle.getString("city"));
         }
-
 
 
             //Beğenme Butonu
@@ -334,6 +341,28 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
                 });
             }
         });
+
+
+
+        //Yorum Silme
+        // TODO: 1.05.2018 Kullanıcı kendi attığı yorumları silebilecek, ve sadece kendi attığı yorumlarda yorum silme butonunu görebilecek.
+        viewHolder.deleteComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e("TAG", getItem(position).getComment());
+
+
+                DatabaseReference deleteCommentFromBarberRef = databaseReference.child("BARBERS").child(getItem(position).getBarberName().toUpperCase().replace(" ", ""))
+                        .child("COMMENTS").child(auth.getCurrentUser().getUid()).child(getItem(position).getCommentId());
+
+                deleteCommentFromBarberRef.setValue(null);
+
+                DatabaseReference deleteCommentFromUserRef = databaseReference.child("USERS").child(auth.getCurrentUser().getUid()).child("COMMENTS").child(getItem(position).getCommentId());
+
+                deleteCommentFromUserRef.setValue(null);
+
+            }
+        }); 
 
         return convertView;
     }
