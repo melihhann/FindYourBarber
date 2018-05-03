@@ -157,13 +157,18 @@ public class CommentsFragment extends Fragment {
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 //Yorumları sayfada gösterme
                 Query query = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("COMMENTS");
-                
+                commentArrayList.clear();
+
+                if(getActivity() != null){
+                    CommentListAdapter adapter = new CommentListAdapter(getActivity(), R.layout.layout_comment, commentArrayList);
+                    listView.setAdapter(adapter);
+                }
+
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        commentArrayList.clear();
-                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
 
+                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                             for(DataSnapshot snapshotChild : snapshot.getChildren()){
                                 Comment comment = new Comment();
                                 comment.setComment(snapshotChild.getValue(Comment.class).getComment());

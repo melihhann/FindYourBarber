@@ -172,11 +172,16 @@ public class MediaFragment extends Fragment {
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 Query query = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("IMAGES");
+                uploadList.clear(); 
+
+                if(getActivity() != null){
+                    imageAdapter = new ImageAdapter(getActivity(), uploadList);
+                    recyclerView.setAdapter(imageAdapter);
+                }
+
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        uploadList.clear();
-
                         for(DataSnapshot snapshot : dataSnapshot.getChildren()){
 
                             String userId = snapshot.getKey();
