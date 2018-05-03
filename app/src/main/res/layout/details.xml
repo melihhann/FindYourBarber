@@ -51,7 +51,7 @@
         android:layout_marginTop="195dp"
         android:layout_toEndOf="@+id/cityText"
         android:layout_toRightOf="@+id/cityText"
-        android:text="Rating" />
+        android:text="Puanı yok." />
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/rateBarberButton"
         android:layout_width="wrap_content"

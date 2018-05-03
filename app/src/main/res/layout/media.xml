@@ -11,28 +11,28 @@
         android:id="@+id/fileUpload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/recycleListView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:text="Hafızadan Yükle" />
 
     <Button
         android:id="@+id/uploadFromCamera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/recycleListView"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
         android:text="Fotoğraf Çek" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycleListView"
         android:layout_width="100dp"
-        android:layout_height="420dp"
+        android:layout_height="350dp"
         android:layout_alignEnd="@+id/uploadFromCamera"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/uploadFromCamera"
-        android:layout_below="@+id/fileUpload"></android.support.v7.widget.RecyclerView>
+        android:layout_alignRight="@+id/uploadFromCamera"></android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

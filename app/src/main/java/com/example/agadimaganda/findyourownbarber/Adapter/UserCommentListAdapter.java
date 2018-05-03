@@ -68,34 +68,29 @@ public class UserCommentListAdapter extends ArrayAdapter<Comment> {
         }
 
         //set the comment
-        if(viewHolder.comment!=null){
+        if(viewHolder.comment != null){
             viewHolder.comment.setText(getItem(position).getComment());
         }
 
 
         //set the likes
-        if(viewHolder.likes!=null){
+        if(viewHolder.likes != null){
             viewHolder.likes.setText(getItem(position).getLikes().toString() + " Beğeni");
         }
 
 
-
-
         //set the timestamp difference
-
-        if(viewHolder.timestamp!=null){
+        if(viewHolder.timestamp != null){
             String timestampDifference = getTimestampDifference(getItem(position));
             if(!timestampDifference.equals("0")){
                 viewHolder.timestamp.setText(timestampDifference + " g");
             }else{
                 viewHolder.timestamp.setText("bugün");
             }
-
         }
 
-
         //set the barberName
-        if(viewHolder.barberName!=null){
+        if(viewHolder.barberName != null){
             viewHolder.barberName.setText(getItem(position).getBarberName());
         }
 

@@ -40,7 +40,6 @@
         android:layout_alignLeft="@+id/addBarber"
         android:layout_alignStart="@+id/addBarber"
         android:layout_below="@+id/addBarber"
-        android:layout_marginTop="51dp"
         android:visibility="visible" />
 
     <Button
@@ -49,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/mapView"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="46dp"
+        android:layout_marginTop="24dp"
         android:text="Berber Ekle"
         tools:layout_editor_absoluteX="148dp"
         tools:layout_editor_absoluteY="302dp" />
