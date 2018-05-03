@@ -89,4 +89,6 @@
     <string name="title_activity_barber_view">BarberViewActivity</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_new_activiy">NewActiviy</string>
+    <string name="title_activity_barber_rate">BarberRateActivity</string>
 </resources>

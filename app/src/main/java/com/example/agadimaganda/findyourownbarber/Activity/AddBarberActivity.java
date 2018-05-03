@@ -24,6 +24,7 @@ import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -53,6 +54,7 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
     //User Interface
     private EditText barberNameEditText;
     private Button button;
+    private AutoCompleteTextView AutocompleteTextView;
 
     //Map
     private MapView mapView;
@@ -65,16 +67,18 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
     private Barber newBarber = new Barber();
     //private coolMethods coolMethods = new coolMethods();
 
+    //Adapters
+    private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
+
     //Variables
     private boolean selectionMade = false;
     private int currentId;
     private Boolean flag = false;
     private BitmapDescriptorFactory bitmapDescriptorFactory;
     private Boolean isMarkerAdded = false;
-    private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
     private GoogleApiClient mGoogleApiClient;
     private LatLngBounds Lat_Long_Bounds = new LatLngBounds(new LatLng(36,24),new LatLng(42,25));
-    private AutoCompleteTextView AutocompleteTextView;
+    private LatLng newBarberMarker;
 
     private AdapterView.OnItemClickListener AutocompleteClickListener = new AdapterView.OnItemClickListener() {
         @Override
@@ -104,6 +108,19 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
                     }
                     newBarber.setLatitude(berberLoc.getLatLng().latitude);
                     newBarber.setLongitude(berberLoc.getLatLng().longitude);
+                    if(isMarkerAdded){
+                        marker.remove();
+                        isMarkerAdded = false;
+                    }
+                    newBarberMarker = new LatLng(berberLoc.getLatLng().latitude, berberLoc.getLatLng().longitude);
+                    marker = map.addMarker(new MarkerOptions()
+                            .position(newBarberMarker).icon(bitmapDescriptorFactory.fromResource(R.drawable.makasufakbuyukufak)));
+
+                    isMarkerAdded = true;
+                    float zoomLevel = 16.0f; //This goes up to 21
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(newBarberMarker, zoomLevel));
+
+
                 }
                 places.release();
             }
@@ -192,9 +209,8 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
                     childRef.child("CITY").setValue(newBarber.getCity());
 
 
-                    if(!selectionMade){
-                        marker.remove();
-                    }
+
+                    marker.remove();
                     barberNameEditText.setText(""); 
                 }
 
@@ -221,17 +237,21 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
                     isMarkerAdded = false;
                 }
 
-                if(!selectionMade){
-                    LatLng newBarberMarker = new LatLng(latLng.latitude, latLng.longitude);
+
+                    newBarberMarker = new LatLng(latLng.latitude, latLng.longitude);
                     marker = map.addMarker(new MarkerOptions()
                             .position(newBarberMarker).icon(bitmapDescriptorFactory.fromResource(R.drawable.makasufakbuyukufak)));
 
+                    float zoomLevel = 16.0f; //This goes up to 21
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(newBarberMarker, zoomLevel));
                     isMarkerAdded = true;
                     newBarber.setLatitude(latLng.latitude);
                     newBarber.setLongitude(latLng.longitude);
 
                     try{
                         address = geocoder.getFromLocation(newBarber.getLatitude(), newBarber.getLongitude(), 1);
+                        AutocompleteTextView.setText(address.get(0).getAddressLine(0)+" "+address.get(0).getAddressLine(1));
+
                     }catch (IOException e){
                         e.printStackTrace();
                     }
@@ -241,7 +261,7 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
                             newBarber.setCity(address.get(0).getAdminArea());
                         }
                     }
-                }
+
 
 
             }

@@ -2,10 +2,13 @@ package com.example.agadimaganda.findyourownbarber.Activity;
 
 import android.content.Intent;
 import android.os.Build;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import com.example.agadimaganda.findyourownbarber.Adapter.SectionsPageAdapter;
 import com.example.agadimaganda.findyourownbarber.Fragment.CommentsFragment;
@@ -20,6 +23,7 @@ public class BarberViewActivity extends AppCompatActivity {
     private SectionsPageAdapter sectionPageAdapter;
     private ViewPager viewPager;
     private android.support.v7.widget.Toolbar barberNameToolbar;
+    private FloatingActionButton button;
 
     //Classes
     private Barber barber = new Barber();
@@ -36,9 +40,10 @@ public class BarberViewActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         barberNameToolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
 
+
         //MapsActivity'den gelen bilgileri alma.
         Intent intent = getIntent();
-        Bundle bundle = getIntent().getExtras();
+        Bundle bundle = intent.getExtras();
         if (intent != null && bundle != null) {
             //isNewBarberAdded = bundle.getBoolean("flag");
             barber.setBarberName(bundle.getString("barberName"));
@@ -53,6 +58,22 @@ public class BarberViewActivity extends AppCompatActivity {
                 barberNameToolbar.setTitle(barber.getBarberName());
             }
         }
+        button = findViewById(R.id.rateBarberButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(BarberViewActivity.this, BarberRateActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("barberName", barber.getBarberName());
+                bundle.putDouble("latitude", barber.getLatitude());
+                bundle.putDouble("longitude", barber.getLongitude());
+                bundle.putString("city", barber.getCity());
+                intent.putExtras(bundle);
+                startActivity(intent);
+
+            }
+        });
+
 
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
