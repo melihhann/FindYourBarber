@@ -3,12 +3,15 @@ package com.example.agadimaganda.findyourownbarber.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.agadimaganda.findyourownbarber.Activity.BarberRateActivity;
+import com.example.agadimaganda.findyourownbarber.Activity.BarberViewActivity;
 import com.example.agadimaganda.findyourownbarber.Object.Barber;
 import com.example.agadimaganda.findyourownbarber.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +30,7 @@ public class DetailsFragment extends Fragment {
     //User Interface
     private TextView cityTextView;
     private TextView ratingTextView;
+    private FloatingActionButton button;
 
     //Classes
     private Barber barber = new Barber();
@@ -49,15 +53,18 @@ public class DetailsFragment extends Fragment {
         cityTextView = (TextView) view.findViewById(R.id.cityTextView);
         ratingTextView = (TextView) view.findViewById(R.id.ratingTextView);
         cityTextView.setText(barber.getCity());
-        Query query = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("RATINGS").child("USERS");
+        Query query = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("RATINGS");
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 divisor = (int) dataSnapshot.getChildrenCount();
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
 
-                    Long rating = (Long) snapshot.getValue();
-                    totalRating =+ ((rating.doubleValue()/2));
+                    for(DataSnapshot childSnap : snapshot.getChildren()){
+                        Long rating = (Long) childSnap.getValue();
+                        totalRating = totalRating + ((rating.doubleValue()/2));
+                    }
+
 
 
                 }
@@ -87,6 +94,21 @@ public class DetailsFragment extends Fragment {
 
             }
         });
+        button = view.findViewById(R.id.rateBarberButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), BarberRateActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("barberName", barber.getBarberName());
+                bundle.putDouble("latitude", barber.getLatitude());
+                bundle.putDouble("longitude", barber.getLongitude());
+                bundle.putString("city", barber.getCity());
+                intent.putExtras(bundle);
+                startActivity(intent);
+
+            }
+        });
         return view;
     }
 
@@ -97,6 +119,8 @@ public class DetailsFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+
+
 
         if(intent != null && bundle != null){
             barber.setBarberName(bundle.getString("barberName"));

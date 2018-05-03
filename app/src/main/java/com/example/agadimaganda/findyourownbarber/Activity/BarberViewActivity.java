@@ -58,21 +58,7 @@ public class BarberViewActivity extends AppCompatActivity {
                 barberNameToolbar.setTitle(barber.getBarberName());
             }
         }
-        button = findViewById(R.id.rateBarberButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(BarberViewActivity.this, BarberRateActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("barberName", barber.getBarberName());
-                bundle.putDouble("latitude", barber.getLatitude());
-                bundle.putDouble("longitude", barber.getLongitude());
-                bundle.putString("city", barber.getCity());
-                intent.putExtras(bundle);
-                startActivity(intent);
 
-            }
-        });
 
 
 
