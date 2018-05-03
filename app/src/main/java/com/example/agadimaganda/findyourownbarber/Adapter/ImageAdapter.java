@@ -2,6 +2,8 @@ package com.example.agadimaganda.findyourownbarber.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.example.agadimaganda.findyourownbarber.Activity.PopupActivity;
 import com.example.agadimaganda.findyourownbarber.Object.Upload;
 import com.example.agadimaganda.findyourownbarber.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,6 +27,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.support.v4.content.ContextCompat.startActivity;
 
 /**
  * Created by Aga diMaganda on 18.04.2018.
@@ -43,7 +48,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     //Database Connection
     DatabaseReference databaseReference;
     FirebaseAuth auth;
-    StorageReference firebaseStorage;
+    StorageReference storageReference;
 
     public ImageAdapter(Context mContext, List<Upload> uploads){
         context = mContext;
@@ -51,12 +56,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
-        firebaseStorage = FirebaseStorage.getInstance().getReference();
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         Bundle bundle = ((Activity) mContext).getIntent().getExtras();
-        barberName = bundle.getString("barberName");
-        barberName = barberName.toUpperCase().replace(" ", "");
-
+        if(bundle != null) {
+            barberName = bundle.getString("barberName");
+            barberName = barberName.toUpperCase().replace(" ", "");
+        }
 
     }
 
@@ -93,14 +99,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
                 public void onClick(View view) {
                     Log.e(TAG,"Silme tusuna basildi.");
 
-                    DatabaseReference photoDeleteRef = databaseReference.child("BARBERS").child(barberName).child("IMAGES").child(auth.getCurrentUser().getUid())
-                            .child(String.valueOf(uploadList.get(position).getImageId()));
-
-                    photoDeleteRef.setValue(null);
-
-                    StorageReference deleteFromStorageRef = firebaseStorage.child(barberName).child(auth.getCurrentUser().getUid()).child(uploadList.get(position).getImageId());
-
-                    deleteFromStorageRef.delete();
+                    Intent intent = new Intent((Activity) context, PopupActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("imageId", uploadList.get(position).getImageId());
+                    bundle.putString("barberName", barberName);
+                    bundle.putString("adapter", "ImageAdapter");
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
                 }
             });
         }

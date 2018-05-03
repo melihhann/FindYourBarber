@@ -157,6 +157,7 @@ public class CommentsFragment extends Fragment {
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 //Yorumları sayfada gösterme
                 Query query = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("COMMENTS");
+                
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

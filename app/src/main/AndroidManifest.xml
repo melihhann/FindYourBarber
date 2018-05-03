@@ -9,8 +9,9 @@
     -->
     <permission
         android:name="com.example.permission.MAPS_RECEIVE"
-        android:protectionLevel="signature"/>
-    <uses-permission android:name="com.example.permission.MAPS_RECEIVE"/>
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.example.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -20,12 +21,12 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:hardwareAccelerated="true">
+        android:theme="@style/AppTheme">
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -39,8 +40,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDpmA1CnLvYPoF5hMz8PhF4dGXZn5wSZBc" />
 
-
-        <activity android:name=".Activity.LoginActivity"
+        <activity
+            android:name=".Activity.LoginActivity"
             android:parentActivityName=".Activity.MapsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,9 +53,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.agadimaganda.findyourownbarber.Activity.MapsActivity" />
         </activity>
-        <activity android:name=".Activity.SignUpActivity"></activity>
-        <activity
-            android:name=".Activity.MapsActivity"></activity> <!-- android:label="@string/title_activity_maps" -->
+        <activity android:name=".Activity.SignUpActivity" />
+        <activity android:name=".Activity.MapsActivity" /> <!-- android:label="@string/title_activity_maps" -->
         <activity
             android:name=".Activity.ProfileActivity"
             android:label="@string/title_activity_profile"
@@ -65,6 +65,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activity.AddBarberActivity" />
         <activity android:name=".Activity.BarberViewActivity" />
+        <activity android:name=".Activity.PopupActivity"
+            android:theme="@style/AppTheme.Popup">
+        </activity>
     </application>
 
 </manifest>

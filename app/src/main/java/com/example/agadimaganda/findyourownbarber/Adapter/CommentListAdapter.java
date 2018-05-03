@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.agadimaganda.findyourownbarber.Activity.PopupActivity;
 import com.example.agadimaganda.findyourownbarber.Object.Barber;
 import com.example.agadimaganda.findyourownbarber.Object.Comment;
 import com.example.agadimaganda.findyourownbarber.Object.Like;
@@ -343,22 +344,22 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         });
 
 
-
+// TODO: 3.05.2018 Sayfada kalan son fotoğraf ve son yorum silinmesine rağmen sayfada gözüküyor.
         //Yorum Silme
         viewHolder.deleteComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.e("TAG", getItem(position).getComment());
 
+                Intent intent = new Intent((Activity) mContext, PopupActivity.class);
+                Bundle bundle = new Bundle();
 
-                DatabaseReference deleteCommentFromBarberRef = databaseReference.child("BARBERS").child(getItem(position).getBarberName().toUpperCase().replace(" ", ""))
-                        .child("COMMENTS").child(auth.getCurrentUser().getUid()).child(getItem(position).getCommentId());
-
-                deleteCommentFromBarberRef.setValue(null);
-
-                DatabaseReference deleteCommentFromUserRef = databaseReference.child("USERS").child(auth.getCurrentUser().getUid()).child("COMMENTS").child(getItem(position).getCommentId());
-
-                deleteCommentFromUserRef.setValue(null);
+                bundle.putString("barberName", getItem(position).getBarberName().toUpperCase().replace(" ", ""));
+                bundle.putString("userId", auth.getCurrentUser().getUid());
+                bundle.putString("commentId", getItem(position).getCommentId());
+                bundle.putString("adapter", "CommentListAdapter");
+                intent.putExtras(bundle);
+                mContext.startActivity(intent);
 
             }
         });

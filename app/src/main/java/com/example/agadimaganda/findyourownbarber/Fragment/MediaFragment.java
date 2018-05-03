@@ -171,7 +171,6 @@ public class MediaFragment extends Fragment {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                // TODO: 2.05.2018 Fotoğraf silindikten sonra buraya gelip listeyi tekrardan dolduracaksın.
                 Query query = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("IMAGES");
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
