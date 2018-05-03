@@ -345,7 +345,6 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
 
 
         //Yorum Silme
-        // TODO: 1.05.2018 Kullanıcı kendi attığı yorumları silebilecek, ve sadece kendi attığı yorumlarda yorum silme butonunu görebilecek.
         viewHolder.deleteComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -362,7 +361,7 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
                 deleteCommentFromUserRef.setValue(null);
 
             }
-        }); 
+        });
 
         return convertView;
     }

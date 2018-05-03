@@ -75,7 +75,6 @@ public class MediaFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         storageReference = FirebaseStorage.getInstance().getReference();
-        auth = FirebaseAuth.getInstance();
         DatabaseReference childRef = databaseReference.child("USERS");
 
         userId = auth.getCurrentUser().getUid();
@@ -86,6 +85,14 @@ public class MediaFragment extends Fragment {
             barber.setLongitude(bundle.getDouble("longitude"));
             barber.setCity(bundle.getString("city"));
         }
+
+
+        //Berber bilgilerini ImageAdapter'a aktarma
+        Intent intentImage = new Intent(getActivity(), ImageAdapter.class);
+        Bundle bundleImage = new Bundle();
+        bundle.putString("barberName", barber.getBarberName());
+        intentImage.putExtras(bundleImage);
+
 
 
         progressDialog = new ProgressDialog(getActivity());
@@ -120,7 +127,7 @@ public class MediaFragment extends Fragment {
 
         uploadList = new ArrayList<>();
 
-        databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("IMAGES").addChildEventListener(new ChildEventListener() {
+        databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("IMAGES").child(userId).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Query query = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("IMAGES");
@@ -130,10 +137,15 @@ public class MediaFragment extends Fragment {
                         uploadList.clear();
                         for(DataSnapshot snapshot : dataSnapshot.getChildren()){
 
+                            String userId = snapshot.getKey();
+
                             for(DataSnapshot snapshotChild : snapshot.getChildren()){
                                 String imageUrl = String.valueOf(snapshotChild.getValue());
+                                String imageId = String.valueOf(snapshotChild.getKey());
                                 final Upload upload = new Upload();
                                 upload.setImageUrl(imageUrl);
+                                upload.setImageId(imageId);
+                                upload.setUserId(userId);
                                 uploadList.add(upload);
                             }
 
@@ -159,7 +171,40 @@ public class MediaFragment extends Fragment {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+                // TODO: 2.05.2018 Fotoğraf silindikten sonra buraya gelip listeyi tekrardan dolduracaksın.
+                Query query = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("IMAGES");
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        uploadList.clear();
 
+                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+
+                            String userId = snapshot.getKey();
+
+                            for(DataSnapshot snapshotChild : snapshot.getChildren()){
+                                String imageUrl = String.valueOf(snapshotChild.getValue());
+                                String imageId = String.valueOf(snapshotChild.getKey());
+                                final Upload upload = new Upload();
+                                upload.setImageUrl(imageUrl);
+                                upload.setImageId(imageId);
+                                upload.setUserId(userId);
+                                uploadList.add(upload);
+                            }
+
+                            if(getActivity() != null){
+                                imageAdapter = new ImageAdapter(getActivity(), uploadList);
+                                recyclerView.setAdapter(imageAdapter);
+                            }
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             @Override
@@ -195,18 +240,20 @@ public class MediaFragment extends Fragment {
             progressDialog.show();
 
             final Uri uri = data.getData();
+            final Upload upload = new Upload();
 
             StorageReference filePath = storageReference.child(barber.getBarberName().toUpperCase().replace(" ", "")).child(userId).child(uri.getLastPathSegment());
+            upload.setLastPathSegment(uri.getLastPathSegment());
 
             filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                    final Upload upload = new Upload();
+
                     upload.setImageUrl(taskSnapshot.getDownloadUrl().toString());
                     final DatabaseReference childReferance = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ", "")).child("IMAGES").child(userId);
 
-                    childReferance.push().setValue(upload.getImageUrl());
+                    childReferance.child(upload.getLastPathSegment()).setValue(upload.getImageUrl());
 
                     Toast.makeText(getActivity(), "Fotoğraf Yükleme Tamamlandı.", Toast.LENGTH_LONG).show();
                     progressDialog.dismiss();
