@@ -207,6 +207,7 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
                     childRef.child("LATITUDE").setValue(newBarber.getLatitude());
                     childRef.child("LONGITUDE").setValue(newBarber.getLongitude());
                     childRef.child("CITY").setValue(newBarber.getCity());
+                    childRef.child("OVERALLRATING").setValue(0);
 
 
 

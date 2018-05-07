@@ -84,6 +84,7 @@ public class MediaFragment extends Fragment {
             barber.setLatitude(bundle.getDouble("latitude"));
             barber.setLongitude(bundle.getDouble("longitude"));
             barber.setCity(bundle.getString("city"));
+            barber.setBarberRate(bundle.getDouble("rating"));
         }
 
 

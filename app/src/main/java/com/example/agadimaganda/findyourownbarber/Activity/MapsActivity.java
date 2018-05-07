@@ -149,6 +149,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Double longitude = (Double) snapshot.child("LONGITUDE").getValue();
                 String city = (String)  snapshot.child("CITY").getValue();
                 Long idLong = (Long) snapshot.child("ID").getValue();
+                Double rating = Double.parseDouble(String.valueOf(snapshot.child("OVERALLRATING").getValue()));
 
                         if(idLong != null){
                         barber.setId(idLong.intValue());
@@ -156,6 +157,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         barber.setLatitude(latitude);
                         barber.setLongitude(longitude);
                         barber.setCity(city);
+                        barber.setBarberRate(rating);
 
                         LatLng newBarberMarker = new LatLng(barber.getLatitude(), barber.getLongitude());
                         marker = mMap.addMarker(new MarkerOptions()
@@ -190,6 +192,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         Double latitude = (Double) snapshot.child("LATITUDE").getValue();
                         Double longitude = (Double) snapshot.child("LONGITUDE").getValue();
                         String city = (String) snapshot.child("CITY").getValue();
+                        Double rating = Double.parseDouble(String.valueOf(snapshot.child("OVERALLRATING").getValue()));
 
                         Barber barber = new Barber();
                         Long idLong  = (Long) snapshot.child("ID").getValue();
@@ -199,6 +202,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 barber.setLatitude(latitude);
                                 barber.setLongitude(longitude);
                                 barber.setCity(city);
+                                barber.setBarberRate(rating);
                                 barberListUpdated.add(barber);
 
                                 if(barberListCurrent.size() < barberListUpdated.size()){
@@ -247,6 +251,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 bundle.putDouble("longitude", barber.getLongitude());
                 bundle.putInt("id", barber.getId());
                 bundle.putString("city", barber.getCity());
+                bundle.putDouble("rating",barber.getBarberRate());
 
                 intent.putExtras(bundle);
                 startActivity(intent);

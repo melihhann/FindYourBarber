@@ -53,47 +53,7 @@ public class DetailsFragment extends Fragment {
         cityTextView = (TextView) view.findViewById(R.id.cityTextView);
         ratingTextView = (TextView) view.findViewById(R.id.ratingTextView);
         cityTextView.setText(barber.getCity());
-        Query query = databaseReference.child("BARBERS").child(barber.getBarberName().toUpperCase().replace(" ","")).child("RATINGS");
-        query.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                divisor = (int) dataSnapshot.getChildrenCount();
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-
-                    for(DataSnapshot childSnap : snapshot.getChildren()){
-                        Long rating = (Long) childSnap.getValue();
-                        totalRating = totalRating + ((rating.doubleValue()/2));
-                    }
-
-
-
-                }
-                barber.setBarberRate(totalRating/divisor);
-                ratingTextView.setText(barber.getBarberRate().toString());
-
-            }
-
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        ratingTextView.setText(barber.getBarberRate().toString());
         button = view.findViewById(R.id.rateBarberButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,6 +64,7 @@ public class DetailsFragment extends Fragment {
                 bundle.putDouble("latitude", barber.getLatitude());
                 bundle.putDouble("longitude", barber.getLongitude());
                 bundle.putString("city", barber.getCity());
+                bundle.putDouble("rating",barber.getBarberRate());
                 intent.putExtras(bundle);
                 startActivity(intent);
 
@@ -127,6 +88,7 @@ public class DetailsFragment extends Fragment {
             barber.setLatitude(bundle.getDouble("latitude"));
             barber.setLongitude(bundle.getDouble("longitude"));
             barber.setCity(bundle.getString("city"));
+            barber.setBarberRate(bundle.getDouble("rating"));
         }
     }
 

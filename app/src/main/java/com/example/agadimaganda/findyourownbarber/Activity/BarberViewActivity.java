@@ -51,6 +51,7 @@ public class BarberViewActivity extends AppCompatActivity {
             barber.setLongitude(bundle.getDouble("longitude"));
             barber.setId(bundle.getInt("id"));
             barber.setCity(bundle.getString("city"));
+            barber.setBarberRate(bundle.getDouble("rating"));
         }
 
         if(barber != null){
@@ -81,6 +82,7 @@ public class BarberViewActivity extends AppCompatActivity {
                         bundle.putDouble("latitude", barber.getLatitude());
                         bundle.putDouble("longitude", barber.getLongitude());
                         bundle.putString("city", barber.getCity());
+                        bundle.putDouble("rating",barber.getBarberRate());
                         intent.putExtras(bundle);
 
                 }
@@ -95,6 +97,7 @@ public class BarberViewActivity extends AppCompatActivity {
                         bundle.putDouble("latitude", barber.getLatitude());
                         bundle.putDouble("longitude", barber.getLongitude());
                         bundle.putString("city", barber.getCity());
+                        bundle.putDouble("rating",barber.getBarberRate());
                         intent.putExtras(bundle);
 
                 }
@@ -109,6 +112,7 @@ public class BarberViewActivity extends AppCompatActivity {
                         bundle.putDouble("latitude", barber.getLatitude());
                         bundle.putDouble("longitude", barber.getLongitude());
                         bundle.putString("city", barber.getCity());
+                        bundle.putDouble("rating",barber.getBarberRate());
                         intent.putExtras(bundle);
 
 
