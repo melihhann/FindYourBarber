@@ -52,6 +52,16 @@
         android:layout_toEndOf="@+id/cityText"
         android:layout_toRightOf="@+id/cityText"
         android:text="Puanı yok." />
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/ratingText"
+        android:layout_marginStart="150dp"
+        android:src="@mipmap/ic_stars_black_24dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="150dp" />
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/rateBarberButton"
         android:layout_width="wrap_content"
