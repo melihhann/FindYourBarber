@@ -125,7 +125,6 @@ public class PopupActivity extends Activity {
 
                 deleteFromStorageRef.delete();
             }
-
                 finish();
             }
         });

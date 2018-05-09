@@ -65,16 +65,15 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activity.AddBarberActivity" />
         <activity android:name=".Activity.BarberViewActivity" />
-
-        <activity android:name=".Activity.PopupActivity"
-            android:theme="@style/AppTheme.Popup">
-        </activity>
-
+        <activity
+            android:name=".Activity.PopupActivity"
+            android:theme="@style/AppTheme.Popup"></activity>
         <activity
             android:name=".Activity.BarberRateActivity"
             android:label="@string/title_activity_barber_rate"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Activity.SearchPopupActivity"
+            android:theme="@style/AppTheme.Popup"></activity>
     </application>
 
 </manifest>

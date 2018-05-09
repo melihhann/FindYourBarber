@@ -75,7 +75,6 @@ public class MediaFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         storageReference = FirebaseStorage.getInstance().getReference();
-        DatabaseReference childRef = databaseReference.child("USERS");
 
         userId = auth.getCurrentUser().getUid();
 

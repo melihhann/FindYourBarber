@@ -29,13 +29,14 @@ public class Barber {
 
     }
 
-    public Barber(String barberName, Double latitude, Double longitude, String city, List<Comment> commentList){
+    public Barber(String barberName, Double latitude, Double longitude, String city, List<Comment> commentList, Double barberRate){
 
         this.barberName = barberName;
         this.latitude = latitude;
         this.longitude = longitude;
         this.city = city;
         this.commentList = commentList;
+        this.barberRate = barberRate;
     }
 
 

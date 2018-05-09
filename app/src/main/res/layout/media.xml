@@ -14,13 +14,15 @@
         android:layout_above="@+id/recycleListView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_marginBottom="34dp"
         android:text="Hafızadan Yükle" />
 
     <Button
         android:id="@+id/uploadFromCamera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/recycleListView"
+        android:layout_alignBaseline="@+id/fileUpload"
+        android:layout_alignBottom="@+id/fileUpload"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:text="Fotoğraf Çek" />

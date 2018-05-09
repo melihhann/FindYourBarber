@@ -14,9 +14,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.agadimaganda.findyourownbarber.Object.Barber;
 import com.example.agadimaganda.findyourownbarber.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -34,15 +36,23 @@ import java.util.ArrayList;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
+    //Variables
     private final static int MY_PERMISSION_FINE_LOCATION = 101;
+    private ArrayList<Barber> barberListUpdated = new ArrayList<>();
+    private ArrayList<Barber> barberListCurrent = new ArrayList<>();
+    private ArrayList<String> barberNameArrayList = new ArrayList<>();
+    private ArrayList<String> barberRateArrayList = new ArrayList<>();
+    private Boolean isNewBarberAdded = false;
+
+    //User Interface
+    private GoogleMap mMap;
     private BottomNavigationView bottomNavigationView;
     private FloatingActionButton addBarberButton;
     private Marker marker;
     private BitmapDescriptorFactory bitmapDescriptorFactory;//Yarayabilir.
-    private ArrayList<Barber> barberListUpdated = new ArrayList<>();
-    private ArrayList<Barber> barberListCurrent = new ArrayList<>();
-    private Boolean isNewBarberAdded = false;
+    private FloatingActionButton searchBarberAction;
+
+    //Database Reference
     private DatabaseReference refForbarberList;
 
 
@@ -113,7 +123,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(intent2);
             }
         });
+
     }
+
+
 
 
     @Override
@@ -158,6 +171,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         barber.setLongitude(longitude);
                         barber.setCity(city);
                         barber.setBarberRate(rating);
+                        barberListCurrent.add(barber);
 
                         LatLng newBarberMarker = new LatLng(barber.getLatitude(), barber.getLongitude());
                         marker = mMap.addMarker(new MarkerOptions()
@@ -168,7 +182,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         marker.setTag(barber);
                        }
-                    //}
+                }
+
+                Bundle bundle = getIntent().getExtras();
+                if(bundle != null){
+                    String barberNameFromPopup = bundle.getString("barberName");
+
+                    if(barberNameFromPopup != null){
+                        for(int i=0; i < barberListCurrent.size(); i++){
+                            if(barberNameFromPopup.trim().equalsIgnoreCase(barberListCurrent.get(i).getBarberName())){
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(barberListCurrent.get(i).getLatitude(), barberListCurrent.get(i).getLongitude()), 12.0f));
+                            }
+                        }
+                    }
                 }
             }
 
@@ -223,7 +249,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     marker.setTag(barberListCurrent.get(barberListCurrent.size() - 1));
                                 }
                             }
-
                     }
                 }
 
@@ -255,6 +280,34 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 intent.putExtras(bundle);
                 startActivity(intent);
+            }
+        });
+
+
+        //Berber Arama Butonu
+        searchBarberAction = (FloatingActionButton) findViewById(R.id.searchButtonAction);
+        searchBarberAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                barberNameArrayList = new ArrayList<>();
+                barberRateArrayList = new ArrayList<>();
+
+                if(barberListCurrent.size() == 0){
+                    Toast.makeText(getApplicationContext(), "Berberler daha yüklenmedi.", Toast.LENGTH_SHORT).show();
+                }else{
+                    for(int i  = 0; i < barberListCurrent.size(); i++){
+                        barberNameArrayList.add(barberListCurrent.get(i).getBarberName());
+                        barberRateArrayList.add(barberListCurrent.get(i).getBarberRate().toString());
+                    }
+
+                    Intent intent = new Intent(MapsActivity.this, SearchPopupActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putStringArrayList("barberNameArrayList", barberNameArrayList);
+                    bundle.putStringArrayList("barberRateArrayList", barberRateArrayList);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
             }
         });
     }

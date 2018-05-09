@@ -53,7 +53,7 @@ public class DetailsFragment extends Fragment {
         cityTextView = (TextView) view.findViewById(R.id.cityTextView);
         ratingTextView = (TextView) view.findViewById(R.id.ratingTextView);
         cityTextView.setText(barber.getCity());
-        ratingTextView.setText(barber.getBarberRate().toString());
+        ratingTextView.setText(String.format("%.2f", barber.getBarberRate()));
         button = view.findViewById(R.id.rateBarberButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override

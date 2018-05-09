@@ -40,5 +40,18 @@
         android:clickable="true"
         app:srcCompat="@mipmap/ic_person_add_black_24dp" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/searchButtonAction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="28dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="61dp"
+        android:clickable="true"
+        app:srcCompat="@drawable/places_ic_search" />
+
 </RelativeLayout>
 
