@@ -174,13 +174,32 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         barberListCurrent.add(barber);
 
                         LatLng newBarberMarker = new LatLng(barber.getLatitude(), barber.getLongitude());
-                        marker = mMap.addMarker(new MarkerOptions()
-                                .position(newBarberMarker)
-                                .title(barber.getBarberName())
-                                //.snippet(Berber Puani)
-                                .icon(bitmapDescriptorFactory.fromResource(R.drawable.makasufakbuyukufak)));
 
-                        marker.setTag(barber);
+                        if(barber.getBarberRate() < 3){
+                            marker = mMap.addMarker(new MarkerOptions()
+                                    .position(newBarberMarker)
+                                    .title(barber.getBarberName())
+                                    .snippet(String.format("%.2f", barber.getBarberRate()))
+                                    .icon(bitmapDescriptorFactory.fromResource(R.drawable.makasufakbuyukufak)));
+
+                            marker.setTag(barber);
+                        }else if(barber.getBarberRate() > 3 && barber.getBarberRate() < 4 ){
+                            marker = mMap.addMarker(new MarkerOptions()
+                                    .position(newBarberMarker)
+                                    .title(barber.getBarberName())
+                                    .snippet(String.format("%.2f", barber.getBarberRate()))
+                                    .icon(bitmapDescriptorFactory.fromResource(R.drawable.scissors)));
+
+                            marker.setTag(barber);
+                        }else{
+                            marker = mMap.addMarker(new MarkerOptions()
+                                    .position(newBarberMarker)
+                                    .title(barber.getBarberName())
+                                    .snippet(String.format("%.2f", barber.getBarberRate()))
+                                    .icon(bitmapDescriptorFactory.fromResource(R.drawable.hairdresser)));
+
+                            marker.setTag(barber);
+                        }
                        }
                 }
 
