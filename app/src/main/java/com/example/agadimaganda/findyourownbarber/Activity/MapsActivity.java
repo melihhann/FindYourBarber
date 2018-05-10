@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,6 +55,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //Database Reference
     private DatabaseReference refForbarberList;
+    private FirebaseAnalytics firebaseAnalytics;
 
 
     public MapsActivity(){
@@ -118,6 +120,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         addBarberButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //Yarattığımız Bundle tutacağı veriyi Analytics'e yollayacak.
+                Bundle params = new Bundle();
+                params.putInt("ButtonID", view.getId());
+                String buttonName = "Add_Barber";
+
+                firebaseAnalytics.logEvent(buttonName, params);
+
                 Intent intent2 = new Intent(MapsActivity.this, AddBarberActivity.class);
                 intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent2);
@@ -142,6 +152,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_FINE_LOCATION);
             }
         }
+
+        //Analytics Reference
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         //Database References
         refForbarberList = FirebaseDatabase.getInstance().getReference();
@@ -309,6 +322,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
 
+                //Yarattığımız Bundle tutacağı veriyi Analytics'e yollayacak.
+                Bundle params = new Bundle();
+                params.putInt("ButtonID", view.getId());
+                String buttonName = "Search_Barber";
+
                 barberNameArrayList = new ArrayList<>();
                 barberRateArrayList = new ArrayList<>();
 
@@ -327,6 +345,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
+
+                firebaseAnalytics.logEvent(buttonName, params);
             }
         });
     }
