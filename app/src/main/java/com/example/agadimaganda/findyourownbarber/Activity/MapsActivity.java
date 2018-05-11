@@ -1,6 +1,7 @@
 package com.example.agadimaganda.findyourownbarber.Activity;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -10,10 +11,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.example.agadimaganda.findyourownbarber.Object.Barber;
@@ -44,6 +47,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ArrayList<String> barberNameArrayList = new ArrayList<>();
     private ArrayList<String> barberRateArrayList = new ArrayList<>();
     private Boolean isNewBarberAdded = false;
+    private RatingBar ratingBar;
 
     //User Interface
     private GoogleMap mMap;
@@ -142,7 +146,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        //Analytics Reference
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        //Dialog To Get App Rating From Users
+        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+        builder.setCancelable(true);
+        builder.setTitle("Puanla");
+        builder.setMessage("Uygulamamıza 1'den 5'e kadar kaç puan verirsiniz?");
+        builder.setView(R.layout.dialog_rate_me);
+        ratingBar = findViewById(R.id.dialogRatingBar);
+        builder.setPositiveButton("Puanla", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                firebaseAnalytics.setUserProperty("usersAppRating", Float.toString(ratingBar.getRating()) );
+                Toast.makeText(getApplicationContext(),"Puanlama yapıldı.",Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton("İptal", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        builder.show();
 
         //Location Permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -153,8 +179,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
 
-        //Analytics Reference
-        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
 
         //Database References
         refForbarberList = FirebaseDatabase.getInstance().getReference();
