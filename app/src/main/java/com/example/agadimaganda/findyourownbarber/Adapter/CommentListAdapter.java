@@ -24,6 +24,7 @@ import com.example.agadimaganda.findyourownbarber.Object.Comment;
 import com.example.agadimaganda.findyourownbarber.Object.Like;
 import com.example.agadimaganda.findyourownbarber.R;
 import com.firebase.client.Firebase;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -66,6 +67,7 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
     private FirebaseAuth auth;
     private DatabaseReference databaseReference;
     private FirebaseDatabase firebaseDatabase;
+    private FirebaseAnalytics firebaseAnalytics;
 
     //Classes
     private Barber barber = new Barber();
@@ -116,6 +118,7 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         auth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+        firebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
 
 
         //set the commentDelete ImageView
@@ -349,6 +352,12 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         viewHolder.deleteComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //Yarattığımız Bundle tutacağı veriyi Analytics'e yollayacak.
+                Bundle params = new Bundle();
+                params.putInt("ButtonID", view.getId());
+                String buttonName = "Delete_Comment";
+
                 Log.e("TAG", getItem(position).getComment());
 
                 Intent intent = new Intent((Activity) mContext, PopupActivity.class);
@@ -361,6 +370,7 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
                 intent.putExtras(bundle);
                 mContext.startActivity(intent);
 
+                firebaseAnalytics.logEvent(buttonName, params);
             }
         });
 

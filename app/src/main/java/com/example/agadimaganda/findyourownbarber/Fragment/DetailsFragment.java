@@ -14,6 +14,7 @@ import com.example.agadimaganda.findyourownbarber.Activity.BarberRateActivity;
 import com.example.agadimaganda.findyourownbarber.Activity.BarberViewActivity;
 import com.example.agadimaganda.findyourownbarber.Object.Barber;
 import com.example.agadimaganda.findyourownbarber.R;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -39,6 +40,7 @@ public class DetailsFragment extends Fragment {
     private FirebaseAuth auth;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
+    private FirebaseAnalytics firebaseAnalytics;
 
     //variables
     private int divisor = 0;
@@ -50,14 +52,24 @@ public class DetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.details, container, false);
+
+        firebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+
         cityTextView = (TextView) view.findViewById(R.id.cityTextView);
         ratingTextView = (TextView) view.findViewById(R.id.ratingTextView);
         cityTextView.setText(barber.getCity());
         ratingTextView.setText(String.format("%.2f", barber.getBarberRate()));
+
         button = view.findViewById(R.id.rateBarberButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //Yarattığımız Bundle tutacağı veriyi Analytics'e yollayacak.
+                Bundle params = new Bundle();
+                params.putInt("ButtonID", view.getId());
+                String buttonName = "Rate_Barber_Button";
+
                 Intent intent = new Intent(getActivity(), BarberRateActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("barberName", barber.getBarberName());
@@ -67,6 +79,8 @@ public class DetailsFragment extends Fragment {
                 bundle.putDouble("rating",barber.getBarberRate());
                 intent.putExtras(bundle);
                 startActivity(intent);
+
+                firebaseAnalytics.logEvent(buttonName, params);
 
             }
         });
@@ -80,6 +94,7 @@ public class DetailsFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+
 
 
 

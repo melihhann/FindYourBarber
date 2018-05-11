@@ -42,12 +42,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //Variables
     private final static int MY_PERMISSION_FINE_LOCATION = 101;
+    final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
     private ArrayList<Barber> barberListUpdated = new ArrayList<>();
     private ArrayList<Barber> barberListCurrent = new ArrayList<>();
     private ArrayList<String> barberNameArrayList = new ArrayList<>();
     private ArrayList<String> barberRateArrayList = new ArrayList<>();
     private Boolean isNewBarberAdded = false;
-    private RatingBar ratingBar;
+
 
     //User Interface
     private GoogleMap mMap;
@@ -146,29 +147,51 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+
+
         //Analytics Reference
         firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         //Dialog To Get App Rating From Users
         AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
-        builder.setCancelable(true);
+        //builder.setCancelable(true);
         builder.setTitle("Puanla");
-        builder.setMessage("Uygulamamıza 1'den 5'e kadar kaç puan verirsiniz?");
+
         builder.setView(R.layout.dialog_rate_me);
-        ratingBar = findViewById(R.id.dialogRatingBar);
-        builder.setPositiveButton("Puanla", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                firebaseAnalytics.setUserProperty("usersAppRating", Float.toString(ratingBar.getRating()) );
-                Toast.makeText(getApplicationContext(),"Puanlama yapıldı.",Toast.LENGTH_SHORT).show();
-            }
-        });
-        builder.setNegativeButton("İptal", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        builder.show();
+
+        builder.setItems(new CharSequence[]
+                        {"*", "**", "***", "****","*****"},
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // The 'which' argument contains the index position
+                        // of the selected item
+                        switch (which) {
+                            case 0:
+                                firebaseAnalytics.setUserProperty("usersAppRating", "1" );
+                                Toast.makeText(getApplicationContext(), "1 verdiniz, allah ıslah etsin.", Toast.LENGTH_SHORT).show();
+                                break;
+                            case 1:
+                                firebaseAnalytics.setUserProperty("usersAppRating", "2" );
+                                Toast.makeText(getApplicationContext(), "2 verdiniz, aklarınız bol olsun.", Toast.LENGTH_SHORT).show();
+                                break;
+                            case 2:
+                                firebaseAnalytics.setUserProperty("usersAppRating", "3" );
+                                Toast.makeText(getApplicationContext(), "3 verdiniz, saçınız gür olsun.", Toast.LENGTH_SHORT).show();
+                                break;
+                            case 3:
+                                firebaseAnalytics.setUserProperty("usersAppRating", "4" );
+                                Toast.makeText(getApplicationContext(), "4 verdiniz, sakalınız gür olsun.", Toast.LENGTH_SHORT).show();
+                                break;
+                            case 4:
+                                firebaseAnalytics.setUserProperty("usersAppRating", "5" );
+                                Toast.makeText(getApplicationContext(), "5 puan verdiniz, iyi tıraşlar...", Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+                    }
+                });
+
+        builder.create().show();
+
 
         //Location Permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -178,8 +201,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_FINE_LOCATION);
             }
         }
-
-
 
         //Database References
         refForbarberList = FirebaseDatabase.getInstance().getReference();
@@ -200,7 +221,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Double longitude = (Double) snapshot.child("LONGITUDE").getValue();
                 String city = (String)  snapshot.child("CITY").getValue();
                 Long idLong = (Long) snapshot.child("ID").getValue();
-                Double rating = Double.parseDouble(String.valueOf(snapshot.child("OVERALLRATING").getValue()));
+                Double rating = 0.0;
+
+                if(snapshot.child("OVERALLRATING").getValue() != null){
+                    rating = Double.parseDouble(String.valueOf(snapshot.child("OVERALLRATING").getValue()));
+                }
 
                         if(idLong != null){
                         barber.setId(idLong.intValue());
@@ -270,7 +295,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for(DataSnapshot snapshot : dataSnapshot.getChildren()){
 
-                        childRefMarker.child("ornek").setValue("aga12");
                         String barberName = (String) snapshot.child("BARBERNAME").getValue();
                         Double latitude = (Double) snapshot.child("LATITUDE").getValue();
                         Double longitude = (Double) snapshot.child("LONGITUDE").getValue();
@@ -375,28 +399,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
-
-
-
-    /*
-    //Eskiden kullanılan Location Permission
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case MY_PERMISSION_FINE_LOCATION:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        mMap.setMyLocationEnabled(true);
-                    }
-                } else{
-                    Toast.makeText(getApplicationContext(), "This app requires location permissions to be granted.", Toast.LENGTH_LONG).show();
-                    finish();
-                }
-                break;
-        }
-    }
-    */
 
 
     //Kamera, Lokasyon ve Hafıza permisyonları

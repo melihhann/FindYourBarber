@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.agadimaganda.findyourownbarber.R;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -18,7 +19,10 @@ public class SettingsActivity extends AppCompatActivity {
     //User Interface
     private BottomNavigationView bottomNavigationView;
     private TextView logoutTextView;
+
+    //Database Reference
     private FirebaseAuth auth;
+    private FirebaseAnalytics firebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +32,7 @@ public class SettingsActivity extends AppCompatActivity {
         logoutTextView = (TextView) findViewById(R.id.logoutTextView);
         logoutTextView.setText("Oturumu Kapat");
         auth = FirebaseAuth.getInstance();
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
         Menu menu = bottomNavigationView.getMenu();
@@ -62,8 +67,15 @@ public class SettingsActivity extends AppCompatActivity {
 
 
     public void logout(View view) {
+
+        //Yarattığımız Bundle tutacağı veriyi Analytics'e yollayacak.
+        Bundle params = new Bundle();
+        params.putInt("ButtonID", view.getId());
+        String buttonName = "logout";
+
         auth.signOut();
         Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
         startActivity(intent);
+        firebaseAnalytics.logEvent(buttonName, params);
     }
 }

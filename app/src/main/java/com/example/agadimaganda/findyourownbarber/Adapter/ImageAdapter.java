@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.agadimaganda.findyourownbarber.Activity.PopupActivity;
 import com.example.agadimaganda.findyourownbarber.Object.Upload;
 import com.example.agadimaganda.findyourownbarber.R;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -49,6 +50,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     DatabaseReference databaseReference;
     FirebaseAuth auth;
     StorageReference storageReference;
+    FirebaseAnalytics firebaseAnalytics;
 
     public ImageAdapter(Context mContext, List<Upload> uploads){
         context = mContext;
@@ -57,6 +59,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         databaseReference = FirebaseDatabase.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
+        firebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
 
         Bundle bundle = ((Activity) mContext).getIntent().getExtras();
         if(bundle != null) {
@@ -94,9 +97,16 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
         //Fotograf silme butonu
         if(holder.imageDelete != null){
+
             holder.imageDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    //Yarattığımız Bundle tutacağı veriyi Analytics'e yollayacak.
+                    Bundle params = new Bundle();
+                    params.putInt("ButtonID", view.getId());
+                    String buttonName = "Delete_Photo";
+
                     Log.e(TAG,"Silme tusuna basildi.");
 
                     Intent intent = new Intent((Activity) context, PopupActivity.class);
@@ -106,6 +116,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
                     bundle.putString("adapter", "ImageAdapter");
                     intent.putExtras(bundle);
                     context.startActivity(intent);
+
+                    firebaseAnalytics.logEvent(buttonName, params);
                 }
             });
         }

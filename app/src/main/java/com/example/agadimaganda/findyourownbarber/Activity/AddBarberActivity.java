@@ -33,6 +33,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -50,6 +51,7 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
 
     //Database
     private DatabaseReference mRef;
+    private FirebaseAnalytics firebaseAnalytics;
 
     //User Interface
     private EditText barberNameEditText;
@@ -93,6 +95,7 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
             }
         }
     };
+
     private ResultCallback<PlaceBuffer> UpdatePlaceDetailsCallback = new ResultCallback<PlaceBuffer>() {
         @Override
         public void onResult(@NonNull PlaceBuffer places) {
@@ -153,6 +156,8 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
         //AutoComplete Stuff, doldur bosalt in text-field-Vra
 
 
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
 
 
         mapView = (MapView) findViewById(R.id.mapView);
@@ -167,6 +172,11 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //Yarattığımız Bundle tutacağı veriyi Analytics'e yollayacak.
+                Bundle params = new Bundle();
+                params.putInt("ButtonID", view.getId());
+                String buttonName = "Confirm_Add_Barber";
 
                 newBarber.setBarberName(barberNameEditText.getText().toString());
                 //newBarber.setLatitude(Double.valueOf(latitudeEditText.getText().toString()));
@@ -210,6 +220,7 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
                     childRef.child("OVERALLRATING").setValue(0);
 
 
+                    firebaseAnalytics.logEvent(buttonName, params);
 
                     marker.remove();
                     barberNameEditText.setText(""); 
