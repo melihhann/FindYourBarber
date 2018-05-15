@@ -109,9 +109,8 @@ public class UserCommentsFragment extends Fragment {
         Intent intent = getActivity().getIntent();
     }
 
-
+    //Yorumun aldığı beğenileri çekme
     public void getCommentLikeCount(DatabaseReference reference, final Comment comment){
-        //Yorumun aldığı beğenileri çekme
 
             reference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override

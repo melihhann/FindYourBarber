@@ -93,8 +93,11 @@ public class SearchPopupActivity extends AppCompatActivity {
 
                 Barber barber = new Barber();
                 barber.setBarberName(barberList.get(i).getBarberName());
+                Boolean flag = true;
 
                 bundle.putString("barberName", barber.getBarberName());
+                bundle.putBoolean("flag", flag);
+
                 intent.putExtras(bundle);
                 startActivity(intent);
 

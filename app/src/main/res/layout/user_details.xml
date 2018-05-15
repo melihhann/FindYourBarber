@@ -47,4 +47,22 @@
         android:layout_toStartOf="@+id/emailTextView"
         android:text="Yaş:  " />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/ageText"
+        android:layout_alignStart="@+id/ageText"
+        android:layout_below="@+id/ageTextView"
+        android:layout_marginTop="13dp"
+        android:text="Favori Berberler"
+        android:id="@+id/favorite_text_view" />
+
+    <ListView
+        android:id="@+id/favoriteBarbersListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignLeft="@+id/ageTextView"
+        android:layout_alignStart="@+id/ageTextView"
+        android:layout_below="@+id/ageTextView"
+        android:layout_marginTop="32dp"></ListView>
 </RelativeLayout>

@@ -7,8 +7,11 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import com.example.agadimaganda.findyourownbarber.Adapter.SectionsPageAdapter;
 import com.example.agadimaganda.findyourownbarber.Fragment.CommentsFragment;
@@ -18,6 +21,9 @@ import com.example.agadimaganda.findyourownbarber.Object.Barber;
 import com.example.agadimaganda.findyourownbarber.R;
 
 public class BarberViewActivity extends AppCompatActivity {
+
+
+    private static final String  TAG = "BarberViewActivity";
 
     //User Interface
     private SectionsPageAdapter sectionPageAdapter;
@@ -59,8 +65,6 @@ public class BarberViewActivity extends AppCompatActivity {
                 barberNameToolbar.setTitle(barber.getBarberName());
             }
         }
-
-
 
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

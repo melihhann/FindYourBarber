@@ -154,7 +154,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         //Dialog To Get App Rating From Users
         AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
-        //builder.setCancelable(true);
+        builder.setCancelable(true);
         builder.setTitle("Puanla");
 
         builder.setView(R.layout.dialog_rate_me);
@@ -238,7 +238,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         LatLng newBarberMarker = new LatLng(barber.getLatitude(), barber.getLongitude());
 
-                        if(barber.getBarberRate() < 3){
+                        if(barber.getBarberRate() <= 3){
                             marker = mMap.addMarker(new MarkerOptions()
                                     .position(newBarberMarker)
                                     .title(barber.getBarberName())
@@ -269,8 +269,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Bundle bundle = getIntent().getExtras();
                 if(bundle != null){
                     String barberNameFromPopup = bundle.getString("barberName");
+                    Boolean flag = bundle.getBoolean("flag");
+                    if(flag == null){
+                        flag = false;
+                    }
 
-                    if(barberNameFromPopup != null){
+                    if(barberNameFromPopup != null && flag){
                         for(int i=0; i < barberListCurrent.size(); i++){
                             if(barberNameFromPopup.trim().equalsIgnoreCase(barberListCurrent.get(i).getBarberName())){
                                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(barberListCurrent.get(i).getLatitude(), barberListCurrent.get(i).getLongitude()), 12.0f));
