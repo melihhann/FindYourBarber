@@ -44,7 +44,7 @@ public class UserDetailsFragment extends Fragment {
     private TextView emailTextView;
     private TextView ageTextView;
     private ListView favoriteBarbersListView;
-    private TextView favoriteBarberTextView; 
+    private TextView favoriteBarberTextView;
 
     //Firebase Connection
     private DatabaseReference databaseReference;

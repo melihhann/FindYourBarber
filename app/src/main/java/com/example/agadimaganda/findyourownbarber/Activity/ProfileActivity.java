@@ -14,6 +14,13 @@ import com.example.agadimaganda.findyourownbarber.Adapter.SectionsPageAdapter;
 import com.example.agadimaganda.findyourownbarber.R;
 import com.example.agadimaganda.findyourownbarber.Fragment.UserCommentsFragment;
 import com.example.agadimaganda.findyourownbarber.Fragment.UserDetailsFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -22,6 +29,14 @@ public class ProfileActivity extends AppCompatActivity {
     private android.support.v7.widget.Toolbar userNameToolbar;
     private ViewPager viewPager;
     private SectionsPageAdapter sectionPageAdapter;
+
+    //Database Connection
+    FirebaseAuth auth;
+    DatabaseReference databaseReference;
+
+    //Variables
+    String userName;
+    String userLastName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +49,30 @@ public class ProfileActivity extends AppCompatActivity {
         menuItem.setChecked(true);
 
         sectionPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
-        viewPager = (ViewPager) findViewById(R.id.containerAga);
+        viewPager = (ViewPager) findViewById(R.id.containerProfile);
         setupViewPager(viewPager);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         userNameToolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+
+        auth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        //Kullanıcı ismini title olarak alma.
+        Query query = databaseReference.child("USERS").child(auth.getCurrentUser().getUid());
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userName = (String) dataSnapshot.child("NAME").getValue();
+                userLastName = (String) dataSnapshot.child("LASTNAME").getValue();
+                userNameToolbar.setTitle(userName + " " + userLastName); 
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
