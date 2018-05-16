@@ -30,6 +30,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,6 +49,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ArrayList<String> barberNameArrayList = new ArrayList<>();
     private ArrayList<String> barberRateArrayList = new ArrayList<>();
     private Boolean isNewBarberAdded = false;
+    private Boolean ratingPopupFlag = false;
+    private Boolean superloop = true;
 
 
     //User Interface
@@ -61,6 +64,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     //Database Reference
     private DatabaseReference refForbarberList;
     private FirebaseAnalytics firebaseAnalytics;
+    private DatabaseReference dbRef;
+    private FirebaseAuth auth;
 
 
     public MapsActivity(){
@@ -150,10 +155,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
+        //Database Reference
+        auth =  FirebaseAuth.getInstance();
+        dbRef = FirebaseDatabase.getInstance().getReference();
+        dbRef = dbRef.child("USERS").child(auth.getCurrentUser().getUid());
         //Analytics Reference
         firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         //Dialog To Get App Rating From Users
-        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
         builder.setCancelable(true);
         builder.setTitle("Puanla");
 
@@ -168,29 +177,59 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         switch (which) {
                             case 0:
                                 firebaseAnalytics.setUserProperty("usersAppRating", "1" );
+                                dbRef.child("RATING").setValue(1);
                                 Toast.makeText(getApplicationContext(), "1 verdiniz, allah ıslah etsin.", Toast.LENGTH_SHORT).show();
                                 break;
                             case 1:
                                 firebaseAnalytics.setUserProperty("usersAppRating", "2" );
+                                dbRef.child("RATING").setValue(2);
                                 Toast.makeText(getApplicationContext(), "2 verdiniz, aklarınız bol olsun.", Toast.LENGTH_SHORT).show();
                                 break;
                             case 2:
                                 firebaseAnalytics.setUserProperty("usersAppRating", "3" );
+                                dbRef.child("RATING").setValue(3);
                                 Toast.makeText(getApplicationContext(), "3 verdiniz, saçınız gür olsun.", Toast.LENGTH_SHORT).show();
                                 break;
                             case 3:
                                 firebaseAnalytics.setUserProperty("usersAppRating", "4" );
+                                dbRef.child("RATING").setValue(4);
                                 Toast.makeText(getApplicationContext(), "4 verdiniz, sakalınız gür olsun.", Toast.LENGTH_SHORT).show();
                                 break;
                             case 4:
                                 firebaseAnalytics.setUserProperty("usersAppRating", "5" );
+                                dbRef.child("RATING").setValue(5);
                                 Toast.makeText(getApplicationContext(), "5 puan verdiniz, iyi tıraşlar...", Toast.LENGTH_SHORT).show();
                                 break;
                         }
                     }
                 });
+        builder.setNegativeButton("Puan vermek istemiyorum", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
 
-        builder.create().show();
+            }
+        });
+
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild("RATING")){
+                    ratingPopupFlag = true;
+                    superloop = false;
+                }
+                else {
+                    builder.create().show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
 
 
         //Location Permission

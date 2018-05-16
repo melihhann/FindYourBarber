@@ -86,6 +86,4 @@ public class Comment {
         this.likePosNeg = likePosNeg;
     }
 
-
-
 }
