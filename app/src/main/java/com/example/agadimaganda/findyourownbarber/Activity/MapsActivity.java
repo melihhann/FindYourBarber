@@ -29,7 +29,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -63,7 +62,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //Database Reference
     private DatabaseReference refForbarberList;
-    private FirebaseAnalytics firebaseAnalytics;
     private DatabaseReference dbRef;
     private FirebaseAuth auth;
 
@@ -136,7 +134,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 params.putInt("ButtonID", view.getId());
                 String buttonName = "Add_Barber";
 
-                firebaseAnalytics.logEvent(buttonName, params);
 
                 Intent intent2 = new Intent(MapsActivity.this, AddBarberActivity.class);
                 intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -160,7 +157,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         dbRef = FirebaseDatabase.getInstance().getReference();
         dbRef = dbRef.child("USERS").child(auth.getCurrentUser().getUid());
         //Analytics Reference
-        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         //Dialog To Get App Rating From Users
         final AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
         builder.setCancelable(true);
@@ -176,27 +172,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         // of the selected item
                         switch (which) {
                             case 0:
-                                firebaseAnalytics.setUserProperty("usersAppRating", "1" );
                                 dbRef.child("RATING").setValue(1);
                                 Toast.makeText(getApplicationContext(), "1 verdiniz, allah ıslah etsin.", Toast.LENGTH_SHORT).show();
                                 break;
                             case 1:
-                                firebaseAnalytics.setUserProperty("usersAppRating", "2" );
                                 dbRef.child("RATING").setValue(2);
                                 Toast.makeText(getApplicationContext(), "2 verdiniz, aklarınız bol olsun.", Toast.LENGTH_SHORT).show();
                                 break;
                             case 2:
-                                firebaseAnalytics.setUserProperty("usersAppRating", "3" );
                                 dbRef.child("RATING").setValue(3);
                                 Toast.makeText(getApplicationContext(), "3 verdiniz, saçınız gür olsun.", Toast.LENGTH_SHORT).show();
                                 break;
                             case 3:
-                                firebaseAnalytics.setUserProperty("usersAppRating", "4" );
                                 dbRef.child("RATING").setValue(4);
                                 Toast.makeText(getApplicationContext(), "4 verdiniz, sakalınız gür olsun.", Toast.LENGTH_SHORT).show();
                                 break;
                             case 4:
-                                firebaseAnalytics.setUserProperty("usersAppRating", "5" );
                                 dbRef.child("RATING").setValue(5);
                                 Toast.makeText(getApplicationContext(), "5 puan verdiniz, iyi tıraşlar...", Toast.LENGTH_SHORT).show();
                                 break;
@@ -438,7 +429,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     startActivity(intent);
                 }
 
-                firebaseAnalytics.logEvent(buttonName, params);
             }
         });
     }

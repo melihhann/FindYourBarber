@@ -33,7 +33,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -51,7 +50,6 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
 
     //Database
     private DatabaseReference mRef;
-    private FirebaseAnalytics firebaseAnalytics;
 
     //User Interface
     private EditText barberNameEditText;
@@ -156,9 +154,6 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
         //AutoComplete Stuff, doldur bosalt in text-field-Vra
 
 
-        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
-
 
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
@@ -218,9 +213,6 @@ public class AddBarberActivity extends AppCompatActivity implements OnMapReadyCa
                     childRef.child("LONGITUDE").setValue(newBarber.getLongitude());
                     childRef.child("CITY").setValue(newBarber.getCity());
                     childRef.child("OVERALLRATING").setValue(0);
-
-
-                    firebaseAnalytics.logEvent(buttonName, params);
 
                     marker.remove();
                     barberNameEditText.setText(""); 

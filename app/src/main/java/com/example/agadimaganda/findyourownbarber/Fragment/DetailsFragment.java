@@ -17,7 +17,6 @@ import com.example.agadimaganda.findyourownbarber.Activity.BarberRateActivity;
 import com.example.agadimaganda.findyourownbarber.Activity.BarberViewActivity;
 import com.example.agadimaganda.findyourownbarber.Object.Barber;
 import com.example.agadimaganda.findyourownbarber.R;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -45,7 +44,6 @@ public class DetailsFragment extends Fragment {
     private FirebaseAuth auth;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
-    private FirebaseAnalytics firebaseAnalytics;
 
     //variables
     private int divisor = 0;
@@ -58,7 +56,6 @@ public class DetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.details, container, false);
 
-        firebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
         cityTextView = (TextView) view.findViewById(R.id.cityTextView);
         ratingTextView = (TextView) view.findViewById(R.id.ratingTextView);
@@ -86,7 +83,6 @@ public class DetailsFragment extends Fragment {
             intent.putExtras(bundle);
             startActivity(intent);
 
-            firebaseAnalytics.logEvent(buttonName, params);
 
             }
         });

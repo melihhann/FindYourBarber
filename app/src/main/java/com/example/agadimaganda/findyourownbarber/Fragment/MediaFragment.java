@@ -20,7 +20,6 @@ import com.example.agadimaganda.findyourownbarber.Object.Barber;
 import com.example.agadimaganda.findyourownbarber.Object.Upload;
 import com.example.agadimaganda.findyourownbarber.R;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -59,7 +58,6 @@ public class MediaFragment extends Fragment {
     private StorageReference storageReference;
     private FirebaseAuth auth;
     private DatabaseReference databaseReference;
-    private FirebaseAnalytics firebaseAnalytics;
 
     //Classes
     private Barber barber = new Barber();
@@ -77,7 +75,6 @@ public class MediaFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         storageReference = FirebaseStorage.getInstance().getReference();
-        firebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
         userId = auth.getCurrentUser().getUid();
 
@@ -109,7 +106,6 @@ public class MediaFragment extends Fragment {
                 Bundle params = new Bundle();
                 params.putInt("ButtonID", view.getId());
                 String buttonName = "File_Upload_Button";
-                firebaseAnalytics.logEvent(buttonName, params);
 
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
@@ -126,7 +122,6 @@ public class MediaFragment extends Fragment {
                 Bundle params = new Bundle();
                 params.putInt("ButtonID", view.getId());
                 String buttonName = "Upload_From_Camera";
-                firebaseAnalytics.logEvent(buttonName, params);
 
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent, CAMERA_REQUEST_CODE);

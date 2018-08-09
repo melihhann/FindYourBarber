@@ -14,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import com.example.agadimaganda.findyourownbarber.Adapter.SectionsPageAdapter;
+import com.example.agadimaganda.findyourownbarber.Fragment.AppointmentFragment;
 import com.example.agadimaganda.findyourownbarber.Fragment.CommentsFragment;
 import com.example.agadimaganda.findyourownbarber.Fragment.DetailsFragment;
 import com.example.agadimaganda.findyourownbarber.Fragment.MediaFragment;
@@ -76,9 +77,6 @@ public class BarberViewActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 if(position == 0){
-                    DetailsFragment fragment = (DetailsFragment) getSupportFragmentManager()
-                            .findFragmentByTag("android:switcher:" + R.id.tabItem+ ":" +
-                                    viewPager.getCurrentItem());
 
                         Intent intent = new Intent(BarberViewActivity.this, DetailsFragment.class);
                         Bundle bundle = new Bundle();
@@ -88,12 +86,8 @@ public class BarberViewActivity extends AppCompatActivity {
                         bundle.putString("city", barber.getCity());
                         bundle.putDouble("rating",barber.getBarberRate());
                         intent.putExtras(bundle);
-
                 }
                 else if(position == 1){
-                    CommentsFragment fragment = (CommentsFragment) getSupportFragmentManager()
-                            .findFragmentByTag("android:switcher:" + R.id.tabItem2 + ":" +
-                                    viewPager.getCurrentItem());
 
                         Intent intent = new Intent(BarberViewActivity.this, CommentsFragment.class);
                         Bundle bundle = new Bundle();
@@ -103,12 +97,8 @@ public class BarberViewActivity extends AppCompatActivity {
                         bundle.putString("city", barber.getCity());
                         bundle.putDouble("rating",barber.getBarberRate());
                         intent.putExtras(bundle);
-
                 }
                 else if(position == 2){
-                    MediaFragment fragment = (MediaFragment) getSupportFragmentManager()
-                            .findFragmentByTag("android:switcher:" + R.id.tabItem3 + ":" +
-                                    viewPager.getCurrentItem());
 
                         Intent intent = new Intent(BarberViewActivity.this, MediaFragment.class);
                         Bundle bundle = new Bundle();
@@ -118,6 +108,8 @@ public class BarberViewActivity extends AppCompatActivity {
                         bundle.putString("city", barber.getCity());
                         bundle.putDouble("rating",barber.getBarberRate());
                         intent.putExtras(bundle);
+                }
+                else if(position == 3){
 
 
                 }
@@ -137,6 +129,7 @@ public class BarberViewActivity extends AppCompatActivity {
         adapter.addFragment(new DetailsFragment(), "detaylar");
         adapter.addFragment(new CommentsFragment(), "yorumlar");
         adapter.addFragment(new MediaFragment(), "medya");
+        adapter.addFragment(new AppointmentFragment(), "ranvedu");
         viewPager.setAdapter(adapter);
     }
 }

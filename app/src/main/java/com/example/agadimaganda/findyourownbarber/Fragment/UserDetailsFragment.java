@@ -107,7 +107,7 @@ public class UserDetailsFragment extends Fragment {
 
 
         /*
-        //Basılan berberin sayfasına gitme şeysi.
+        //Basılan berberin sayfasına gitme şeysi. Sıkıntıları var.
         favoriteBarbersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

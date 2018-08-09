@@ -25,7 +25,6 @@ import com.example.agadimaganda.findyourownbarber.Object.Comment;
 import com.example.agadimaganda.findyourownbarber.R;
 import com.example.agadimaganda.findyourownbarber.Method.coolMethods;
 import com.firebase.client.Firebase;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -56,7 +55,6 @@ public class CommentsFragment extends Fragment {
     private FirebaseAuth auth;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
-    private FirebaseAnalytics firebaseAnalytics;
 
     //Classes
     private Barber barber = new Barber();
@@ -77,7 +75,6 @@ public class CommentsFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
-        firebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
         Intent intent = getActivity().getIntent();
         Bundle bundle = getActivity().getIntent().getExtras();
@@ -114,7 +111,6 @@ public class CommentsFragment extends Fragment {
                     closeKeyboard();
 
                     params.putInt("ButtonID", view.getId());
-                    firebaseAnalytics.logEvent(buttonName, params);
                 }else{
                     Toast.makeText(getActivity(), "Boş yorum yollayamazsınız.",Toast.LENGTH_SHORT).show();
                 }
